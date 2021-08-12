@@ -1,3 +1,8 @@
+"   seekDir 1 - forward, end
+"           -1 - backward, end
+"           0 - outward
+"           2 - forward, start
+"           -2 - backward, start
 function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
     let [sl, sc, el, ec] = [0, 0, 0, 0]
     let [cl, cc] = a:cursorPos
@@ -8,12 +13,12 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
             let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             continue
         endif
-        if a:seekDir == 1
+        if a:seekDir == 1 || a:seekDir == 2
             if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec))
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
             continue
-        elseif a:seekDir == -1
+        elseif a:seekDir == -1 || a:seekDir == -2
             if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc))
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
@@ -25,45 +30,62 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
 endfunction
 
 function! GetPair(pairPatterns, seekDir, multiplier)" direction -1 backwards, 0 current, 1 forward
-    let multiplier = v:count1
+    let multiplier = a:multiplier
     let [_, l, c, _, _] = getcurpos()
     let [sl, sc, el, ec] = [l, c, l ,c]
-    if a:seekDir == 1
-        let [tsl, tsc, tel, tec] = GetPairForward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
-        if sl == 0 || el == 0
-            return [sl, sc, el, ec]
-        else
-            let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-        endif
-        for _ in range(a:multiplier - 1)
-            let [_, _, tel, tec] = GetPairForward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
-            if tel == 0
-                return [sl, sc, el, ec]
-            else
-                let [el, ec] = [tel, tec]
+    if a:seekDir == 1 || a:seekDir == 2
+        let [sl, sc, el, ec] = GetPairForward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
+        if sl != 0 && el != 0
+            if a:seekDir == 2
+                let [el, ec] = [sl, sc]
             endif
-        endfor
-    elseif a:seekDir == -1 
-        let [tsl, tsc, tel, tec] = GetPairBackward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
-        if sl == 0 || el == 0
-            return [sl, sc, el, ec]
+            for _ in range(multiplier - 1)
+                let [tsl, tsc, tel, tec] = GetPairForward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
+                if tel == 0
+                    break
+                else
+                    if a:seekDir == 1
+                        let [el, ec] = [tel, tec]
+                    else
+                        let [el, ec] = [tsl, tsc]
+                    endif
+                endif
+            endfor
         else
-            let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-        endif
-        for _ in range(a:multiplier - 1)
-            let [tsl, tsc, _, _] = GetPairBackward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
-            if tsl == 0
-                return [sl, sc, el, ec]
-            else
-                let [sl, sc] = [tsl, tsc]
+            " going to the beginning of the bracket needs to be more strict, or not finding a pair won't be picked up
+            if a:seekDir == 2
+                let [sl, sc, el, ec] = [0, 0, 0, 0]
             endif
-        endfor
+        endif
+    elseif a:seekDir == -1 || a:seekDir == -2
+        let [sl, sc, el, ec] = GetPairBackward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
+        if sl != 0 || el != 0
+            if a:seekDir == -2
+                let [sl, sc] = [el, ec]
+            endif
+            for _ in range(multiplier - 1)
+                let [tsl, tsc, tel, tec] = GetPairBackward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
+                if tsl == 0
+                    break
+                else
+                    if a:seekDir == -1
+                        let [sl, sc] = [tsl, tsc]
+                    else
+                        let [sl, sc] = [tel, tec]
+                    endif
+                endif
+            endfor
+        else
+            if a:seekDir == -2
+                let [sl, sc, el, ec] = [0, 0, 0, 0]
+            endif
+        endif
     else
         let [sl, sc, el, ec] = GetPairOutward(a:pairPatterns.opening, a:pairPatterns.closing)
         if sl == 0 || el == 0
             return [sl, sc, el, ec]
         endif
-        for _ in range(a:multiplier - 1)
+        for _ in range(multiplier - 1)
             let [tsl, tsc, tel, tec] = GetPairOutward(a:pairPatterns.opening, a:pairPatterns.closing)
             if tsl == 0 || tel == 0
                 return [sl, sc, el, ec]
@@ -77,29 +99,19 @@ endfunction
 
 function! GetPairForward(cursorPos, openPattern, closePattern)
     let [sl, sc, el, ec] = a:cursorPos
-    let [tl1, tc1] = searchpos(a:openPattern, 'cWn') 
+    let [tl1, tc1] = searchpos(a:openPattern, 'Wn') 
     let [tl2, tc2] = searchpos(a:closePattern, 'Wn') 
-    if tl2 < tl1 || (tl2 == tl1 && tc2 < tc1)
-        let [el, ec] = [tl2, tc2]
-        call cursor(tl2, tc2)
-    else
-        let [sl, sc, el, ec] = [tl1, tc1, tl2, tc2]
-        call cursor(tl2, tc2)
-    endif
+    let [sl, sc, el, ec] = [tl1, tc1, tl2, tc2]
+    call cursor(tl2, tc2)
     return [sl, sc, el, ec]
 endfunction
 
 function! GetPairBackward(cursorPos, openPattern, closePattern)
     let [sl, sc, el, ec] = a:cursorPos
-    let [tl1, tc1] = searchpos(a:closePattern, 'cbWn')
+    let [tl1, tc1] = searchpos(a:closePattern, 'bWn')
     let [tl2, tc2] = searchpos(a:openPattern, 'bWn')
-    if tl2 > tl1 || (tl2 == tl1 && tc2 > tc1)
-        let [sl, sc] = [tl2, tc2]
-        call cursor(tl2, tc2)
-    else
-        let [sl, sc, el, ec] = [tl2, tc2, tl1, tc1]
-        call cursor(tl2, tc2)
-    endif
+    let [sl, sc, el, ec] = [tl2, tc2, tl1, tc1]
+    call cursor(tl2, tc2)
     return [sl, sc, el, ec]
 endfunction
 

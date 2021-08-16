@@ -3,24 +3,32 @@
 "           0 - outward
 "           2 - forward, start
 "           -2 - backward, start
+"           3 - forward, end, inner
+"           -3 - backward, start, inner
+"           4 - forward, start, inner
+"           -4 backward, start, inner
 function! move#quote#GetQuotes(cursorPos, seekDir, multiplier)
     let [sl, sc, el, ec] = [0, 0, 0, 0]
     let [cl, cc] = a:cursorPos
     for pattern in g:quotePatterns
         call cursor(cl, cc)
-        let [tsl, tsc, tel, tec] = GetOneQuote(pattern, a:seekDir, a:multiplier)
-        if sl == 0 && sc == 0 && el == 0 && ec == 0
-            let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-            continue
-        endif
-        if a:seekDir == 1 || a:seekDir == 2
+        let [tsl, tsc, tel, tec] = move#quote#GetOneQuote(pattern, a:seekDir, a:multiplier)
+        if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
             if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+                if a:seekDir == 3 || a:seekDir == 4
+                    let [sl, sc] = util#GetNextPos(sl, sc)
+                    let [el, ec] = util#GetPrevPos(el, ec)
+                endif
             endif
             continue
-        elseif a:seekDir == -1 || a:seekDir == -2
+        elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
             if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+                if a:seekDir == -3 || a:seekDir == -4
+                    let [sl, sc] = util#GetNextPos(sl, sc)
+                    let [el, ec] = util#GetPrevPos(el, ec)
+                endif
             endif
             continue
         else
@@ -29,9 +37,17 @@ function! move#quote#GetQuotes(cursorPos, seekDir, multiplier)
     return [sl, sc, el, ec]
 endfunction
 
-function! GetOneQuote(quotePattern, seekDir, multiplier)
+function! move#quote#GetOneQuote(quotePattern, seekDir, multiplier)
     let multiplier = a:multiplier
     let [_, l, c, _, _] = getcurpos()
+    if (a:seekDir == 3 || a:seekDir == 4) && util#MatchNextChar(a:quotePattern, l, c)
+        let [l, c] = util#GetNextPos(l, c)
+        call cursor(l, c)
+    endif
+    if (a:seekDir == -3 || a:seekDir == -4) && util#MatchPrevChar(a:quotePattern, l, c)
+        let [l, c] = util#GetPrevPos(l, c)
+        call cursor(l, c)
+    endif
     let [sl, sc, el, ec] = [l, c, l ,c]
     let line = getline('.')
     let col = col('.')
@@ -54,7 +70,7 @@ function! GetOneQuote(quotePattern, seekDir, multiplier)
     " assume current line is inside quote if no quote is in the line at all
     let quotingLeft = (lc % 2 == 1) || (lc == 0 && rc == 0 && !cursorOnQuote)
     let quotingRight = (rc % 2 == 1) || (lc == 0 && rc == 0)
-    if a:seekDir == 1 || a:seekDir == 2
+    if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
         let flags = 'W' . (quotingRight ? ('b' . (cursorOnQuote ? 'c' : '')) : '')
         let [sl, sc] = searchpos(a:quotePattern, flags)
         let [el, ec] = searchpos(a:quotePattern,  'W')
@@ -81,7 +97,7 @@ function! GetOneQuote(quotePattern, seekDir, multiplier)
         else
             let [sl, sc, el, ec] = [0, 0, 0, 0]
         endif
-    elseif a:seekDir == -1 || a:seekDir == -2
+    elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
         let flags = 'W' . (quotingLeft ? ('' . (cursorOnQuote ? 'c' : '')) : 'b')
         let [el, ec] = searchpos(a:quotePattern, flags)
         let [sl, sc] = searchpos(a:quotePattern,  'bW')
@@ -110,7 +126,7 @@ function! GetOneQuote(quotePattern, seekDir, multiplier)
         endif
     else
         if !quotingLeft && !quotingRight
-            let [sl, sc, el, ec] = GetQuoteOutward([sl, sc], [sl, sc], a:quotePattern)
+            let [sl, sc, el, ec] = move#quote#GetQuoteOutward([sl, sc], [sl, sc], a:quotePattern)
         else
             if quotingLeft
                 let [sl, sc] = searchpos(a:quotePattern, 'bW')
@@ -123,7 +139,7 @@ function! GetOneQuote(quotePattern, seekDir, multiplier)
             return [sl, sc, el, ec]
         endif
         for _ in range(multiplier - 1)
-            let [tsl, tsc, tel, tec] = GetQuoteOutward([sl, sc], [el, ec], a:quotePattern)
+            let [tsl, tsc, tel, tec] = move#quote#GetQuoteOutward([sl, sc], [el, ec], a:quotePattern)
             if tsl == 0 || tel == 0
                 return [sl, sc, el, ec]
             else
@@ -134,7 +150,7 @@ function! GetOneQuote(quotePattern, seekDir, multiplier)
     return [sl, sc, el, ec]
 endfunction
 
-function! GetQuoteOutward(curPos1, curPos2, quotePattern)
+function! move#quote#GetQuoteOutward(curPos1, curPos2, quotePattern)
     let [tl, tc] = a:curPos2
     call cursor(tl, tc)
     call searchpos(a:quotePattern, 'W')

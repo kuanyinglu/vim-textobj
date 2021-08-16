@@ -13,14 +13,22 @@ function! move#tag#GetTags(cursorPos, seekDir, multiplier)
             let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             continue
         endif
-        if a:seekDir == 1 || a:seekDir == 2
+        if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
             if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+                if a:seekDir == 3 || a:seekDir == 4
+                    let [sl, sc] = util#GetNextPos(sl, sc)
+                    let [el, ec] = util#GetPrevPos(el, ec)
+                endif
             endif
             continue
-        elseif a:seekDir == -1 || a:seekDir == -2
+        elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
             if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+                if a:seekDir == -3 || a:seekDir == -4
+                    let [sl, sc] = util#GetNextPos(sl, sc)
+                    let [el, ec] = util#GetPrevPos(el, ec)
+                endif
             endif
             continue
         else

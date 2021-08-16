@@ -1,5 +1,8 @@
 let g:quotePatterns = ["'", '\(\\\)\@<!"', '`']
 let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '[', 'closing': ']' }, { 'opening': '<', 'closing': '>' }, { 'opening': '(', 'closing': ')' }]
+let g:tagPatterns = [{ 'opening': '>', 'closing': '<' }, { 'opening': '<', 'closing': '>' }]
+"Tag name from opening   <\zs\w\+\ze>
+"Tag name from ending    <\/\zs\w\+\ze>
 
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end
@@ -30,3 +33,11 @@ vmap ]b :<c-u>call txtObj#Move('move#pair#GetPairs',  4)<cr>
 vmap [b :<c-u>call txtObj#Move('move#pair#GetPairs',  5)<cr>
 vmap ]B :<c-u>call txtObj#Move('move#pair#GetPairs',  6)<cr>
 vmap [B :<c-u>call txtObj#Move('move#pair#GetPairs',  7)<cr>
+nmap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  0)<cr>
+nmap [t :<c-u>call txtObj#Move('move#tag#GetTags',  1)<cr>
+nmap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  2)<cr>
+nmap [T :<c-u>call txtObj#Move('move#tag#GetTags',  3)<cr>
+vmap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  4)<cr>
+vmap [t :<c-u>call txtObj#Move('move#tag#GetTags',  5)<cr>
+vmap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  6)<cr>
+vmap [T :<c-u>call txtObj#Move('move#tag#GetTags',  7)<cr>

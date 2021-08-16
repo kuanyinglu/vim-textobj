@@ -8,18 +8,18 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
     let [cl, cc] = a:cursorPos
     for pattern in g:blockPatterns
         call cursor(cl, cc)
-        let [tsl, tsc, tel, tec] = GetPair(pattern, a:seekDir, a:multiplier)
+        let [tsl, tsc, tel, tec] = move#pair#GetPair(pattern, a:seekDir, a:multiplier)
         if sl == 0 && sc == 0 && el == 0 && ec == 0
             let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             continue
         endif
         if a:seekDir == 1 || a:seekDir == 2
-            if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec))
+            if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
             continue
         elseif a:seekDir == -1 || a:seekDir == -2
-            if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc))
+            if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
             continue
@@ -29,7 +29,7 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
     return [sl, sc, el, ec]
 endfunction
 
-function! GetPair(pairPatterns, seekDir, multiplier)" direction -1 backwards, 0 current, 1 forward
+function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 backwards, 0 current, 1 forward
     let multiplier = a:multiplier
     let [_, l, c, _, _] = getcurpos()
     let [sl, sc, el, ec] = [l, c, l ,c]

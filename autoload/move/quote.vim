@@ -14,12 +14,12 @@ function! move#quote#GetQuotes(cursorPos, seekDir, multiplier)
             continue
         endif
         if a:seekDir == 1 || a:seekDir == 2
-            if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec))
+            if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
             continue
         elseif a:seekDir == -1 || a:seekDir == -2
-            if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc))
+            if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
             endif
             continue

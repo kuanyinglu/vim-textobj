@@ -3,6 +3,10 @@
 "           0 - outward
 "           2 - forward, start
 "           -2 - backward, start
+"           3 - forward, end, inner
+"           -3 - backward, start, inner
+"           4 - forward, start, inner
+"           -4 backward, start, inner
 function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
     let [sl, sc, el, ec] = [0, 0, 0, 0]
     let [cl, cc] = a:cursorPos
@@ -12,18 +16,20 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
         if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
             if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-                if a:seekDir == 3 || a:seekDir == 4
-                    let [sl, sc] = util#GetNextPos(sl, sc)
+                if a:seekDir == 3
                     let [el, ec] = util#GetPrevPos(el, ec)
+                elseif a:seekDir == 4
+                    let [el, ec] = util#GetNextPos(el, ec)
                 endif
             endif
             continue
         elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
             if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-                if a:seekDir == -3 || a:seekDir == -4
+                if a:seekDir == -3
                     let [sl, sc] = util#GetNextPos(sl, sc)
-                    let [el, ec] = util#GetPrevPos(el, ec)
+                elseif a:seekDir == -4
+                    let [sl, sc] = util#GetPrevPos(sl, sc)
                 endif
             endif
             continue
@@ -33,7 +39,7 @@ function! move#pair#GetPairs(cursorPos, seekDir, multiplier)
     return [sl, sc, el, ec]
 endfunction
 
-function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 backwards, 0 current, 1 forward
+function! move#pair#GetPair(pairPatterns, seekDir, multiplier)
     let multiplier = a:multiplier
     let [_, l, c, _, _] = getcurpos()
     let [sl, sc, el, ec] = [l, c, l ,c]
@@ -44,7 +50,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
         endif
         let [sl, sc, el, ec] = move#pair#GetPairForward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
         if sl != 0 && el != 0
-            if a:seekDir == 2
+            if a:seekDir == 2 || a:seekDir == 4
                 let [el, ec] = [sl, sc]
             endif
             for _ in range(multiplier - 1)
@@ -52,7 +58,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
                 if tel == 0
                     break
                 else
-                    if a:seekDir == 1
+                    if a:seekDir == 1 || a:seekDir == 3
                         let [el, ec] = [tel, tec]
                     else
                         let [el, ec] = [tsl, tsc]
@@ -61,7 +67,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
             endfor
         else
             " going to the beginning of the bracket needs to be more strict, or not finding a pair won't be picked up
-            if a:seekDir == 2
+            if a:seekDir == 2 || a:seekDir == 4
                 let [sl, sc, el, ec] = [0, 0, 0, 0]
             endif
         endif
@@ -72,7 +78,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
         endif
         let [sl, sc, el, ec] = move#pair#GetPairBackward([sl, sc, el, ec], a:pairPatterns.opening, a:pairPatterns.closing)
         if sl != 0 || el != 0
-            if a:seekDir == -2
+            if a:seekDir == -2 || a:seekDir == -4
                 let [sl, sc] = [el, ec]
             endif
             for _ in range(multiplier - 1)
@@ -80,7 +86,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
                 if tsl == 0
                     break
                 else
-                    if a:seekDir == -1
+                    if a:seekDir == -1 || a:seekDir == -3
                         let [sl, sc] = [tsl, tsc]
                     else
                         let [sl, sc] = [tel, tec]
@@ -88,7 +94,7 @@ function! move#pair#GetPair(pairPatterns, seekDir, multiplier)" direction -1 bac
                 endif
             endfor
         else
-            if a:seekDir == -2
+            if a:seekDir == -2 || a:seekDir == -4
                 let [sl, sc, el, ec] = [0, 0, 0, 0]
             endif
         endif

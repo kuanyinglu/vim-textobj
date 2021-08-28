@@ -1,8 +1,9 @@
 function! util#GetNextPos(l, c)
     let [l, c] = [a:l, a:c]
     if a:l != 0
-        if a:c == strwidth(getline('.'))
+        if a:c == strwidth(getline(l))
             let l = a:l + 1
+            let c = 1
         else
             let c = a:c + 1
         endif
@@ -32,8 +33,9 @@ endfunction
 function! util#GetPrevPos(l, c)
     let [l, c] = [a:l, a:c]
     if a:l != 0
-        if a:c == 0
+        if a:c == 1
             let l = a:l - 1
+            let c = strwidth(getline(l))
         else
             let c = a:c - 1
         endif

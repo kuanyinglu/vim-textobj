@@ -1,6 +1,9 @@
 let g:quotePatterns = ["'", '\(\\\)\@<!"', '`']
-let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '[', 'closing': ']' }, { 'opening': '<', 'closing': '>' }, { 'opening': '(', 'closing': ')' }]
-let g:tagPatterns = [{ 'opening': '>', 'closing': '<' }, { 'opening': '<', 'closing': '>' }]
+let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '[', 'closing': ']' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
+let g:tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
+let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
+" -matches html start tags <\_[^/]\{-}\(=\)\@<!>
+" -matches htm end tags <\/\_[^/]\{-}\(=\)\@<!>
 
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end
@@ -63,3 +66,19 @@ vmap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  4)<cr>
 vmap [t :<c-u>call txtObj#Move('move#tag#GetTags',  5)<cr>
 vmap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  6)<cr>
 vmap [T :<c-u>call txtObj#Move('move#tag#GetTags',  7)<cr>
+nmap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  8)<cr>
+nmap [it :<c-u>call txtObj#Move('move#tag#GetTags',  9)<cr>
+nmap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  10)<cr>
+nmap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  11)<cr>
+vmap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  12)<cr>
+vmap [it :<c-u>call txtObj#Move('move#tag#GetTags',  13)<cr>
+vmap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  14)<cr>
+vmap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  15)<cr>
+nmap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  0)<cr>
+nmap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  1)<cr>
+nmap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  2)<cr>
+nmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  3)<cr>
+vmap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  4)<cr>
+vmap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  5)<cr>
+vmap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  6)<cr>
+vmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  7)<cr>

@@ -50,6 +50,7 @@ function! txtObj#Move(f, mode)
     let seekDir = GetSeekDir(a:mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
+    let [sl, sc, el, ec] = [0, 0, 0, 0]
     if a:mode == 0 || a:mode == 2 || a:mode == 8 || a:mode == 10
         let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
         if el != 0 && ec != 0
@@ -79,4 +80,5 @@ function! txtObj#Move(f, mode)
             call cursor(cl, cc)
         endif
     endif
+    echom [sl, sc, el, ec]
 endfunction

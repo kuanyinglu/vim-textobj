@@ -16,18 +16,20 @@ function! move#quote#GetQuotes(cursorPos, seekDir, multiplier)
         if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
             if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-                if a:seekDir == 3 || a:seekDir == 4
-                    let [sl, sc] = util#GetNextPos(sl, sc)
+                if a:seekDir == 3
                     let [el, ec] = util#GetPrevPos(el, ec)
+                elseif a:seekDir == 4
+                    let [el, ec] = util#GetNextPos(el, ec)
                 endif
             endif
             continue
         elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
             if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
                 let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
-                if a:seekDir == -3 || a:seekDir == -4
+                if a:seekDir == -3
                     let [sl, sc] = util#GetNextPos(sl, sc)
-                    let [el, ec] = util#GetPrevPos(el, ec)
+                elseif a:seekDir == -4
+                    let [sl, sc] = util#GetPrevPos(sl, sc)
                 endif
             endif
             continue
@@ -75,7 +77,7 @@ function! move#quote#GetOneQuote(quotePattern, seekDir, multiplier)
         let [sl, sc] = searchpos(a:quotePattern, flags)
         let [el, ec] = searchpos(a:quotePattern,  'W')
         if el != 0
-            if a:seekDir == 2
+            if a:seekDir == 2 || a:seekDir == 4
                 let [el, ec] = [sl, sc]
                 if el <= l && ec <= c
                     let multiplier = multiplier + 1
@@ -87,7 +89,7 @@ function! move#quote#GetOneQuote(quotePattern, seekDir, multiplier)
                 if tel2 == 0
                     break
                 else
-                    if a:seekDir == 1
+                    if a:seekDir == 1 || a:seekDir == 3
                         let [el, ec] = [tel2, tec2]
                     else
                         let [el, ec] = [tel1, tec1]
@@ -102,7 +104,7 @@ function! move#quote#GetOneQuote(quotePattern, seekDir, multiplier)
         let [el, ec] = searchpos(a:quotePattern, flags)
         let [sl, sc] = searchpos(a:quotePattern,  'bW')
         if sl != 0
-            if a:seekDir == -2
+            if a:seekDir == -2 || a:seekDir == -4
                 let [sl, sc] = [el, ec]
                 if sl <= l && sc <= c
                     let multiplier = multiplier + 1
@@ -114,7 +116,7 @@ function! move#quote#GetOneQuote(quotePattern, seekDir, multiplier)
                 if tsl2 == 0
                     break
                 else
-                    if a:seekDir == -1
+                    if a:seekDir == -1 || a:seekDir == -3
                         let [sl, sc] = [tsl2, tsc2]
                     else
                         let [sl, sc] = [tsl1, tsc1]

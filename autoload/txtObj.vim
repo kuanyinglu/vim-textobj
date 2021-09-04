@@ -1,19 +1,19 @@
 function! GetSeekDir(mode)
-    if a:mode == 0 || a:mode == 4
+    if a:mode == 0 || a:mode == 4 || a:mode == 18
         return 1
-    elseif a:mode == 1 || a:mode == 5
+    elseif a:mode == 1 || a:mode == 5 || a:mode == 19
         return -1
-    elseif a:mode == 2 || a:mode == 6
+    elseif a:mode == 2 || a:mode == 6 || a:mode == 20
         return 2
-    elseif a:mode == 3 || a:mode == 7
+    elseif a:mode == 3 || a:mode == 7 || a:mode == 21
         return -2
-    elseif a:mode == 8 || a:mode == 12
+    elseif a:mode == 8 || a:mode == 12 || a:mode == 22
         return 3
-    elseif a:mode == 9 || a:mode == 13
+    elseif a:mode == 9 || a:mode == 13 || a:mode == 23
         return -3
-    elseif a:mode == 10 || a:mode == 14
+    elseif a:mode == 10 || a:mode == 14 || a:mode == 24
         return 4
-    elseif a:mode == 11 || a:mode == 15
+    elseif a:mode == 11 || a:mode == 15 || a:mode == 25
         return -4
     endif
 endfunction
@@ -51,28 +51,42 @@ function! txtObj#Move(f, mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
     let [sl, sc, el, ec] = [0, 0, 0, 0]
-    if a:mode == 0 || a:mode == 2 || a:mode == 8 || a:mode == 10
+    if a:mode == 0 || a:mode == 2 a:mode == 4 || a:mode == 6 || a:mode == 8 || a:mode == 10 || a:mode == 12 || a:mode == 14
         let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
         if el != 0 && ec != 0
             call cursor(el, ec)
         else
             call cursor(cl, cc)
         endif
-    elseif a:mode == 1 || a:mode == 3 || a:mode == 9 || a:mode == 11
+    elseif a:mode == 1 || a:mode == 3 || a:mode == 5 || a:mode == 7 || a:mode == 9 || a:mode == 11 || a:mode == 13 || a:mode == 15
         let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
         if sl != 0 && sc != 0
             call cursor(sl, sc)
         else
             call cursor(cl, cc)
         endif
-    elseif a:mode == 4 || a:mode == 6 || a:mode == 12 || a:mode == 14
+    endif
+    echom [sl, sc, el, ec]
+endfunction
+
+function! txtObj#Op(f, mode)
+    let multiplier = v:count1
+    let seekDir = GetSeekDir(a:mode)
+    call SetupCursor(a:mode)
+    let [_, cl, cc, _, _] = getcurpos()
+    let [sl, sc, el, ec] = [0, 0, 0, 0]
+    if a:mode == 18 || a:mode == 20 || a:mode == 22 || a:mode == 24
         let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
         if el != 0 && ec != 0
+            let [el, ec] = util#GetNextPos(el, ec)
+            call cursor(sl, sc)
+            normal! m[
             call cursor(el, ec)
+            normal! m]
         else
             call cursor(cl, cc)
         endif
-    elseif a:mode == 5 || a:mode == 7 || a:mode == 13 || a:mode == 15
+    elseif a:mode == 19 || a:mode == 21 || a:mode == 23 || a:mode == 25
         let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
         if sl != 0 && sc != 0
             call cursor(sl, sc)

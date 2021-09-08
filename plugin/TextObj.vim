@@ -1,5 +1,5 @@
 let g:quotePatterns = ["'", '\(\\\)\@<!"', '`']
-let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '[', 'closing': ']' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
+let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '\[', 'closing': '\]' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
 let g:tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
 let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
 " -matches html start tags <\_[^/]\{-}\(=\)\@<!>
@@ -33,7 +33,7 @@ let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)'
 " 25 - op mode, backward, start, inner
 " 26 - op mode, current
 
-"Normal and visual mode
+"Normal and visual mode move
 nmap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  0)<cr>
 nmap [q :<c-u>call txtObj#Move('move#quote#GetQuotes',  1)<cr>
 nmap ]Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  2)<cr>
@@ -93,31 +93,39 @@ vmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  7)<cr>
 
 "Operator pending mode
 
-omap ]q :<c-u>call txtObj#Op('move#quote#GetQuotes',  18)<cr>
-omap [q :<c-u>call txtObj#Op('move#quote#GetQuotes',  19)<cr>
-omap ]Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  20)<cr>
-omap [Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  21)<cr>
-omap ]iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  22)<cr>
-omap [iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  23)<cr>
-omap ]iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  24)<cr>
-omap [iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  25)<cr>
-omap ]b :<c-u>call txtObj#Op('move#pair#GetPairs',  18)<cr>
-omap [b :<c-u>call txtObj#Op('move#pair#GetPairs',  19)<cr>
-omap ]B :<c-u>call txtObj#Op('move#pair#GetPairs',  20)<cr>
-omap [B :<c-u>call txtObj#Op('move#pair#GetPairs',  21)<cr>
-omap ]ib :<c-u>call txtObj#Op('move#pair#GetPairs',  22)<cr>
-omap [ib :<c-u>call txtObj#Op('move#pair#GetPairs',  23)<cr>
-omap ]iB :<c-u>call txtObj#Op('move#pair#GetPairs',  24)<cr>
-omap [iB :<c-u>call txtObj#Op('move#pair#GetPairs',  25)<cr>
-omap ]t :<c-u>call txtObj#Op('move#tag#GetTags',  18)<cr>
-omap [t :<c-u>call txtObj#Op('move#tag#GetTags',  19)<cr>
-omap ]T :<c-u>call txtObj#Op('move#tag#GetTags',  20)<cr>
-omap [T :<c-u>call txtObj#Op('move#tag#GetTags',  21)<cr>
-omap ]it :<c-u>call txtObj#Op('move#tag#GetTags',  22)<cr>
-omap [it :<c-u>call txtObj#Op('move#tag#GetTags',  23)<cr>
-omap ]iT :<c-u>call txtObj#Op('move#tag#GetTags',  24)<cr>
-omap [iT :<c-u>call txtObj#Op('move#tag#GetTags',  25)<cr>
-omap ]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 18)<cr>
-omap [<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 19)<cr>
-omap ]]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 20)<cr>
-omap [[<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 21)<cr>
+omap ]q :<c-u>call txtObj#Op('move#quote#GetQuotes',  20)<cr>
+omap [q :<c-u>call txtObj#Op('move#quote#GetQuotes',  21)<cr>
+omap ]Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  22)<cr>
+omap [Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  23)<cr>
+omap ]iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  24)<cr>
+omap [iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  25)<cr>
+omap ]iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  26)<cr>
+omap [iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  27)<cr>
+omap ]b :<c-u>call txtObj#Op('move#pair#GetPairs',  20)<cr>
+omap [b :<c-u>call txtObj#Op('move#pair#GetPairs',  21)<cr>
+omap ]B :<c-u>call txtObj#Op('move#pair#GetPairs',  22)<cr>
+omap [B :<c-u>call txtObj#Op('move#pair#GetPairs',  23)<cr>
+omap ]ib :<c-u>call txtObj#Op('move#pair#GetPairs',  24)<cr>
+omap [ib :<c-u>call txtObj#Op('move#pair#GetPairs',  25)<cr>
+omap ]iB :<c-u>call txtObj#Op('move#pair#GetPairs',  26)<cr>
+omap [iB :<c-u>call txtObj#Op('move#pair#GetPairs',  27)<cr>
+omap ]t :<c-u>call txtObj#Op('move#tag#GetTags',  20)<cr>
+omap [t :<c-u>call txtObj#Op('move#tag#GetTags',  21)<cr>
+omap ]T :<c-u>call txtObj#Op('move#tag#GetTags',  22)<cr>
+omap [T :<c-u>call txtObj#Op('move#tag#GetTags',  23)<cr>
+omap ]it :<c-u>call txtObj#Op('move#tag#GetTags',  24)<cr>
+omap [it :<c-u>call txtObj#Op('move#tag#GetTags',  25)<cr>
+omap ]iT :<c-u>call txtObj#Op('move#tag#GetTags',  26)<cr>
+omap [iT :<c-u>call txtObj#Op('move#tag#GetTags',  27)<cr>
+omap ]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 20)<cr>
+omap [<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 21)<cr>
+omap ]]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 22)<cr>
+omap [[<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 23)<cr>
+
+"Expand, shrink
+map { <nop>
+map } <nop>
+vmap }b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  16)<cr>
+vmap {b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  17)<cr>
+vmap }ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  18)<cr>
+vmap {ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  19)<cr>

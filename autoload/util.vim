@@ -61,3 +61,13 @@ function! util#MatchPrevChar(pattern, l, c)
     endif
     return v:false
 endfunction
+
+function! util#MakeSelection(cursorPos)
+    let [vl, vc, cl ,cc] = a:cursorPos
+    if mode() == 'v'
+        normal! v
+    endif
+    call cursor(vl, vc)
+    normal! v
+    call cursor(cl, cc)
+endfunction

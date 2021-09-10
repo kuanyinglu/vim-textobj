@@ -8,7 +8,7 @@
 "           4 - forward, start, inner
 "           -4 backward, start, inner
 function! move#tag#GetTags(cursorPos, seekDir, multiplier)
-    let [sl, sc, el, ec] = [0, 0, 0, 0]
+    let [rl, rc] = [0, 0]
     let [cl, cc] = a:cursorPos
     let pattern = {}
     if a:seekDir == 1 || a:seekDir == -2
@@ -22,26 +22,26 @@ function! move#tag#GetTags(cursorPos, seekDir, multiplier)
         let pattern.opening = g:tagPatterns.es
     endif
     call cursor(cl, cc)
-    let [tsl, tsc, tel, tec] = move#pair#GetPair(pattern, a:seekDir, a:multiplier)
-    if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4
-        if tel != 0 && tec != 0 && (tel < el || (tel == el && tec < ec) || el == 0)
-            let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+    let [trl, trc] = move#pair#GetPair(pattern, a:seekDir, a:multiplier)
+    if a:seekDir >= 1 && a:seekDir <= 4
+        if trl != 0 && trc != 0 && (trl < rl || (trl == rl && trc < rc) || rl == 0)
+            let [rl, rc] = [trl, trc]
             if a:seekDir == 3
-                let [el, ec] = util#GetPrevPos(el, ec)
+                let [rl, rc] = util#GetPrevPos(rl, rc)
             elseif a:seekDir == 4
-                let [el, ec] = util#GetNextPos(el, ec)
+                let [rl, rc] = util#GetNextPos(rl, rc)
             endif
         endif
-    elseif a:seekDir == -1 || a:seekDir == -2 || a:seekDir == -3 || a:seekDir == -4
-        if tsl != 0 && tsc != 0 && (tsl > sl || (tsl == sl && tsc > sc) || sl == 0)
-            let [sl, sc, el, ec] = [tsl, tsc, tel, tec]
+    elseif a:seekDir <= -1 && a:seekDir >= -4
+        if trl != 0 && trc != 0 && (trl > rl || (trl == rl && trc > rc) || rl == 0)
+            let [rl, rc] = [trl, trc]
             if a:seekDir == -3
-                let [sl, sc] = util#GetNextPos(sl, sc)
+                let [rl, rc] = util#GetNextPos(rl, rc)
             elseif a:seekDir == -4
-                let [sl, sc] = util#GetPrevPos(sl, sc)
+                let [rl, rc] = util#GetPrevPos(rl, rc)
             endif
         endif
     else
     endif
-    return [sl, sc, el, ec]
+    return [rl, rc]
 endfunction

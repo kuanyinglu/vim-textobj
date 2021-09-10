@@ -2,14 +2,14 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
-function! scale#pair#GetPairs(cursorPos, scaleMode, multiplier)
+function! scale#pair#GetPairs(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     for pattern in g:blockPatterns
         call util#MakeSelection(a:cursorPos)
-        let [tvl, tvc, tcl, tcc] = scale#pair#GetPair(pattern, a:scaleMode, a:multiplier)
-        if tvl == 0
+        let [tvl, tvc, tcl, tcc] = scale#pair#GetPair(pattern, a:scaleMode)
+        if tvl == 0 || tcl == 0
             continue
         endif
         " echom [tvl, tvc, tcl, tcc]
@@ -46,8 +46,7 @@ function! scale#pair#GetPairs(cursorPos, scaleMode, multiplier)
     return [vl, vc, cl ,cc]
 endfunction
 
-function! scale#pair#GetPair(pairPatterns, scaleMode, multiplier)
-    let multiplier = a:multiplier
+function! scale#pair#GetPair(pairPatterns, scaleMode)
     let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if a:scaleMode == 1 || a:scaleMode == 2
@@ -64,14 +63,6 @@ function! scale#pair#GetPair(pairPatterns, scaleMode, multiplier)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
-        for _ in range(multiplier - 1)
-            let [tvl, tvc, tcl ,tcc] = scale#pair#GetPairOutward([vl, vc, cl ,cc], a:pairPatterns.opening, a:pairPatterns.closing)
-            if tvl == 0 || tcl == 0
-                return [vl, vc, cl ,cc]
-            else
-                let [vl, vc, cl ,cc] = [tvl, tvc, tcl ,tcc]
-            endif
-        endfor
     elseif a:scaleMode == -1 || a:scaleMode == -2
         if a:scaleMode == -1
             if selectionForward
@@ -86,15 +77,6 @@ function! scale#pair#GetPair(pairPatterns, scaleMode, multiplier)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
-        for _ in range(multiplier - 1)
-            let [tvl, tvc, tcl ,tcc] = scale#pair#GetPairInward([vl, vc, cl ,cc], a:pairPatterns.opening, a:pairPatterns.closing)
-            if tvl == 0 || tcl == 0
-                return [vl, vc, cl ,cc]
-            else
-                let [vl, vc, cl ,cc] = [tvl, tvc, tcl ,tcc]
-            endif
-        endfor
-    else
     endif
     return [vl, vc, cl ,cc]
 endfunction

@@ -70,23 +70,21 @@ function! txtObj#Move(f, mode)
     let seekDir = GetSeekDir(a:mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
-    let [sl, sc, el, ec] = [0, 0, 0, 0]
-    if a:mode == 0 || a:mode == 2 || a:mode == 4 || a:mode == 6 || a:mode == 8 || a:mode == 10 || a:mode == 12 || a:mode == 14
-        let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
-        if el != 0 && ec != 0
-            call cursor(el, ec)
-        else
-            call cursor(cl, cc)
-        endif
-    elseif a:mode == 1 || a:mode == 3 || a:mode == 5 || a:mode == 7 || a:mode == 9 || a:mode == 11 || a:mode == 13 || a:mode == 15
-        let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
-        if sl != 0 && sc != 0
-            call cursor(sl, sc)
-        else
-            call cursor(cl, cc)
-        endif
+    let [rl, rc] = [0, 0]
+    if a:mode >= 0 && a:mode <= 15
+        for _ in range(multiplier)
+            let [rl, rc] = call(function(a:f), [[cl, cc], seekDir])
+            if rl != 0 && rc != 0
+                call cursor(rl, rc)
+                let [_, cl, cc, _, _] = getcurpos()
+                let [rl, rc] = [0, 0]
+            else
+                call cursor(cl, cc)
+                break
+            endif
+        endfor
     endif
-    echom [sl, sc, el, ec]
+    echom [rl, rc]
 endfunction
 
 function! txtObj#Op(f, mode)
@@ -94,25 +92,25 @@ function! txtObj#Op(f, mode)
     let seekDir = GetSeekDir(a:mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
-    let [sl, sc, el, ec] = [0, 0, 0, 0]
-    if a:mode == 20 || a:mode == 22 || a:mode == 24 || a:mode == 26
-        let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
-        if el != 0 && ec != 0
-            "Needed +1 shift for the end
-            let [el, ec] = util#GetNextPos(el, ec)
-            call cursor(el, ec)
-        else
-            call cursor(cl, cc)
-        endif
-    elseif a:mode == 21 || a:mode == 23 || a:mode == 25 || a:mode == 27
-        let [sl, sc, el, ec] = call(function(a:f), [[cl, cc], seekDir, multiplier])
-        if sl != 0 && sc != 0
-            call cursor(sl, sc)
-        else
-            call cursor(cl, cc)
-        endif
+    let [rl, rc] = [0, 0]
+    if a:mode >= 20 && a:mode <= 27
+        for _ in range(multiplier)
+            let [rl, rc] = call(function(a:f), [[cl, cc], seekDir])
+            if rl != 0 && rc != 0
+                if a:mode == 20 || a:mode == 22 || a:mode == 24 || a:mode == 26
+                    "Needed +1 shift for the end
+                    let [rl, rc] = util#GetNextPos(rl, rc)
+                endif
+                call cursor(rl, rc)
+                let [_, cl, cc, _, _] = getcurpos()
+                let [rl, rc] = [0, 0]
+            else
+                call cursor(cl, cc)
+                break
+            endif
+        endfor
     endif
-    echom [sl, sc, el, ec]
+    echom [rl, rc]
 endfunction
 
 function! txtObj#Scale(f, mode)
@@ -120,20 +118,17 @@ function! txtObj#Scale(f, mode)
     let scaleMode = GetScaleMode(a:mode)
     normal! gv
     let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
-    if a:mode == 16 || a:mode == 18 
-        let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[vl, vc, cl, cc], scaleMode, multiplier])
-        if tvl != 0
-            call util#MakeSelection([tvl, tvc, tcl, tcc])
-        else
-            call util#MakeSelection([vl, vc, cl, cc])
-        endif
-    elseif a:mode == 17 || a:mode == 19
-        let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[vl, vc, cl, cc], scaleMode, multiplier])
-        if tvl != 0
-            call util#MakeSelection([tvl, tvc, tcl, tcc])
-        else
-            call util#MakeSelection([vl, vc, cl, cc])
-        endif
+    if a:mode >= 16 && a:mode <= 19 
+        for _ in range(multiplier)
+            let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[vl, vc, cl, cc], scaleMode])
+            if tvl != 0
+                call util#MakeSelection([tvl, tvc, tcl, tcc])
+                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+            else
+                call util#MakeSelection([vl, vc, cl, cc])
+                break
+            endif
+        endfor
     endif
     echom [vl, vc, cl ,cc]
 endfunction

@@ -129,3 +129,11 @@ vmap }b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  16)<cr>
 vmap {b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  17)<cr>
 vmap }ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  18)<cr>
 vmap {ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  19)<cr>
+vmap }q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  16)<cr>
+vmap {q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  17)<cr>
+vmap }iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  18)<cr>
+vmap {iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  19)<cr>
+vmap }t :<c-u>call txtObj#Scale('scale#tag#GetTags',  16)<cr>
+vmap {t :<c-u>call txtObj#Scale('scale#tag#GetTags',  17)<cr>
+vmap }it :<c-u>call txtObj#Scale('scale#tag#GetTags',  18)<cr>
+vmap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>

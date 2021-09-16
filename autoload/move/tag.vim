@@ -7,7 +7,7 @@
 "           -3 - backward, start, inner
 "           4 - forward, start, inner
 "           -4 backward, start, inner
-function! move#tag#GetTags(cursorPos, seekDir, multiplier)
+function! move#tag#GetTags(cursorPos, seekDir)
     let [rl, rc] = [0, 0]
     let [cl, cc] = a:cursorPos
     let pattern = {}
@@ -22,7 +22,7 @@ function! move#tag#GetTags(cursorPos, seekDir, multiplier)
         let pattern.opening = g:tagPatterns.es
     endif
     call cursor(cl, cc)
-    let [trl, trc] = move#pair#GetPair(pattern, a:seekDir, a:multiplier)
+    let [trl, trc] = move#pair#GetPair(pattern, a:seekDir)
     if a:seekDir >= 1 && a:seekDir <= 4
         if trl != 0 && trc != 0 && (trl < rl || (trl == rl && trc < rc) || rl == 0)
             let [rl, rc] = [trl, trc]

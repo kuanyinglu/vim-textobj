@@ -17,7 +17,8 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
     call cursor(cl, cc)
     let [tvl, tvc, tcl, tcc] = scale#pair#GetPair(pattern, a:scaleMode)
     if a:scaleMode == 1 || a:scaleMode == 2
-        if (selectionForward && (tcl > cl || (tcl == cl && tcc > cc))) || (!selectionForward && (tvl > vl || (tvl == vl && tvc > vc)))
+        let validSelection = (selectionForward && (tcl > cl || (tcl == cl && tcc > cc))) || (!selectionForward && (tvl > vl || (tvl == vl && tvc > vc)))
+        if validSelection
             let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             if a:scaleMode == 2
                 if selectionForward
@@ -30,7 +31,8 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
             endif
         endif
     elseif a:scaleMode == -1 || a:scaleMode == -2
-        if (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
+        let validSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
+        if validSelection
             let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             if a:scaleMode == -2
                 if selectionForward

@@ -13,7 +13,10 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
             continue
         endif
         if a:scaleMode == 1 || a:scaleMode == 2
-            if (selectionForward && (tcl > ocl || (tcl == ocl && tcc > occ)) && (vl == ovl || (tcl < cl || (tcl == cl && tcc > cc)))) || (!selectionForward && (tvl > ovl || (tvl == ovl && tvc > ovc)) && (vl == ovl || (tvl < vl || (tvl == vl && tvc < vc))))
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let validSelection = (selectionForward && (tcl > ocl || (tcl == ocl && tcc > occ))) || (!selectionForward && (tvl > ovl || (tvl == ovl && tvc > ovc)))
+            let closerSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
+            if (validSelection && firstSelection) || (validSelection && closerSelection)
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
                 if a:scaleMode == 2
                     if selectionForward
@@ -25,9 +28,11 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
                     endif
                 endif
             endif
-            continue
         elseif a:scaleMode == -1 || a:scaleMode == -2
-            if (selectionForward && (tcl < ocl || (tcl == ocl && tcc < occ)) && (vl == ovl || (tcl > cl || (tcl == cl && tcc > cc)))) || (!selectionForward && (tvl < ovl || (tvl == ovl && tvc < ovc)) && (vl == ovl || (tvl > vl || (tvl == vl && tvc > vc))))
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let validSelection = (selectionForward && (tcl < ocl || (tcl == ocl && tcc < occ))) || (!selectionForward && (tvl < ovl || (tvl == ovl && tvc < ovc)))
+            let closerSelection = (selectionForward && (tcl > cl || (tcl == cl && tcc > cc))) || (!selectionForward && (tvl > vl || (tvl == vl && tvc > vc)))
+            if (validSelection && firstSelection) || (validSelection && closerSelection)
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
                 if a:scaleMode == -2
                     if selectionForward
@@ -39,7 +44,6 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
                     endif
                 endif
             endif
-            continue
         endif
     endfor
     return [vl, vc, cl ,cc]
@@ -83,12 +87,10 @@ function! scale#quote#GetQuoteOutward(cursorPos, pattern)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if selectionForward
+        let [cl, cc] = searchpos(a:pattern, 'W')
         call cursor(vl, vc)
         let [vl, vc] = searchpos(a:pattern, 'bW')
-        call cursor(cl, cc)
-        let [cl, cc] = searchpos(a:pattern, 'W')
     else
-        call cursor(cl, cc)
         let [cl, cc] = searchpos(a:pattern, 'bW')
         call cursor(vl, vc)
         let [vl, vc] = searchpos(a:pattern, 'W')
@@ -101,15 +103,13 @@ function! scale#quote#GetQuoteInward(cursorPos, pattern)
     let [tvl, tvc, tcl, tcc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if selectionForward
+        let [tcl, tcc] = searchpos(a:pattern, 'bW', vl)
         call cursor(vl, vc)
         let [tvl, tvc] = searchpos(a:pattern, 'W', cl)
-        call cursor(cl, cc)
-        let [tcl, tcc] = searchpos(a:pattern, 'bW', vl)
         if tvl != 0 && tcl != 0 && tcl >= tvl && tcc >= tvc
             let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
         endif
     else
-        call cursor(cl, cc)
         let [tcl, tcc] = searchpos(a:pattern, 'W', vl)
         call cursor(vl, vc)
         let [tvl, tvc] = searchpos(a:pattern, 'bW', cl)

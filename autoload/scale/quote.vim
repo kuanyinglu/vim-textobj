@@ -67,7 +67,7 @@ function! scale#quote#GetOneQuote(quotePattern, scaleMode)
             return [0, 0, 0, 0]
         endif
     elseif a:scaleMode == -1 || a:scaleMode == -2
-        if a:scaleMode == -1
+        if a:scaleMode == -2
             if selectionForward
                 let [cl, cc] = util#GetPrevPos(cl, cc)
                 let [vl, vc] = util#GetNextPos(vl, vc)

@@ -137,3 +137,7 @@ vmap }t :<c-u>call txtObj#Scale('scale#tag#GetTags',  16)<cr>
 vmap {t :<c-u>call txtObj#Scale('scale#tag#GetTags',  17)<cr>
 vmap }it :<c-u>call txtObj#Scale('scale#tag#GetTags',  18)<cr>
 vmap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>
+vmap }<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  16)<cr>
+vmap {<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  17)<cr>
+vmap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
+vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>

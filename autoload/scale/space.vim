@@ -11,10 +11,10 @@ function! scale#space#GetSpaces(cursorPos, scaleMode)
     if tvl == 0 || tcl == 0
         return [0, 0, 0, 0]
     endif
-    let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-    if a:scaleMode == 2
+    if a:scaleMode == 1 || a:scaleMode == 2
         let validSelection = (selectionForward && (tcl > cl || (tcl == cl && tcc > cc))) || (!selectionForward && (tvl > vl || (tvl == vl && tvc > vc)))
         if validSelection
+            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             if a:scaleMode == 2
                 if selectionForward
                     let [cl, cc] = util#GetPrevPos(cl, cc)
@@ -26,8 +26,9 @@ function! scale#space#GetSpaces(cursorPos, scaleMode)
             endif
         endif
     elseif a:scaleMode == -1 || a:scaleMode == -2
-        let validSelection = (selectionForward && (tcl < ocl || (tcl == ocl && tcc < occ))) || (!selectionForward && (tvl < ovl || (tvl == ovl && tvc < ovc)))
+        let validSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
         if validSelection
+            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             if a:scaleMode == -2
                 if selectionForward
                     let [cl, cc] = util#GetPrevPos(cl, cc)
@@ -63,8 +64,41 @@ function! scale#space#GetSpace(scaleMode)
             let pattern2 = g:spacePatterns.first
         endif
     endif
-    let [cl, cc] = searchpos(pattern1, 'W')
-    call cursor(vl, vc)
-    let [vl, vc] = searchpos(pattern2, 'bW')
+    if a:scaleMode == 2 || a:scaleMode == -2
+        if selectionForward
+            let [cl, cc] = util#GetNextPos(cl, cc)
+            let [vl, vc] = util#GetPrevPos(vl, vc)
+        else
+            let [cl, cc] = util#GetPrevPos(cl, cc)
+            let [vl, vc] = util#GetNextPos(vl, vc)
+        endif
+    endif
+    if a:scaleMode == 1 || a:scaleMode == 2
+        call cursor(cl, cc)
+        if selectionForward
+            let [cl, cc] = searchpos(pattern1, 'W')
+        else
+            let [cl, cc] = searchpos(pattern1, 'bW')
+        endif
+        call cursor(vl, vc)
+        if selectionForward
+            let [vl, vc] = searchpos(pattern2, 'bW')
+        else
+            let [vl, vc] = searchpos(pattern2, 'W')
+        endif
+    elseif a:scaleMode == -1 || a:scaleMode == -2
+        call cursor(cl, cc)
+        if selectionForward
+            let [cl, cc] = searchpos(pattern1, 'bW')
+        else
+            let [cl, cc] = searchpos(pattern1, 'W')
+        endif
+        call cursor(vl, vc)
+        if selectionForward
+            let [vl, vc] = searchpos(pattern2, 'W')
+        else
+            let [vl, vc] = searchpos(pattern2, 'bW')
+        endif
+    endif
     return [vl, vc, cl ,cc]
 endfunction

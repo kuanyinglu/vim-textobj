@@ -46,27 +46,7 @@ function! move#quote#GetOneQuote(quotePattern, seekDir)
         call cursor(l, c)
     endif
     let [rl, rc] = [l, c]
-    let line = getline('.')
-    let col = col('.')
-
-    " cut line in left of, on and right of cursor
-    let left = col > 1 ? line[: col-2] : ""
-    let cursor = line[col-1]
-    " also test for escaped quotes
-    let cursor2 = col > 1 ? line[col-2 : col-1] : line[col-1]
-    let right = line[col :]
-
-    " how many delitimers left, on and right of cursor
-    " assuming current line starts with no quote
-    let leftC = len(split(left, a:quotePattern, 1)) - 1
-    let cc = len(split(cursor, a:quotePattern, 1)) - 1
-    let cc2 = len(split(cursor2, a:quotePattern, 1)) - 1
-    let rightC = len(split(right, a:quotePattern, 1)) - 1
-
-    let cursorOnQuote = cc == 1 && cc2 > 0 
-    " assume current line is inside quote if no quote is in the line at all
-    let quotingLeft = (leftC % 2 == 1) || (leftC == 0 && rightC == 0 && !cursorOnQuote)
-    let quotingRight = (rightC % 2 == 1) || (leftC == 0 && rightC == 0)
+    
     if a:seekDir >= 1 && a:seekDir <= 4
         if ((!quotingRight && (a:seekDir == 1 || a:seekDir == 3))) || (quotingRight && (a:seekDir == 2 || a:seekDir == 4))
             call searchpos(a:quotePattern, 'W')

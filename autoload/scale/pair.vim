@@ -2,6 +2,7 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
+"           3 - current
 function! scale#pair#GetPairs(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
@@ -12,7 +13,6 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
         if tvl == 0 || tcl == 0
             continue
         endif
-        " echom [tvl, tvc, tcl, tcc]
         if a:scaleMode == 1 || a:scaleMode == 2
             let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && (tcl > ocl || (tcl == ocl && tcc > occ))) || (!selectionForward && (tvl > ovl || (tvl == ovl && tvc > ovc)))
@@ -47,6 +47,12 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
                 endif
             endif
             continue
+        elseif a:scaleMode == 3 || a:scaleMode == 4
+            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+            if a:scaleMode == 4
+                let [cl, cc] = util#GetPrevPos(cl, cc)
+                let [vl, vc] = util#GetNextPos(vl, vc)
+            endif
         endif
     endfor
     return [vl, vc, cl ,cc]
@@ -80,6 +86,11 @@ function! scale#pair#GetPair(pairPatterns, scaleMode)
             endif
         endif
         let [vl, vc, cl ,cc] = scale#pair#GetPairInward([vl, vc, cl, cc], a:pairPatterns.opening, a:pairPatterns.closing)
+        if vl == 0 || cl == 0
+            return [0, 0, 0, 0]
+        endif
+    elseif a:scaleMode == 3 || a:scaleMode == 4
+        let [vl, vc, cl ,cc] = scale#pair#GetPairCurrent([cl, cc], a:pairPatterns.opening, a:pairPatterns.closing)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
@@ -122,4 +133,21 @@ function! scale#pair#GetPairInward(cursorPos, openPattern, closePattern)
         endif
     endif
     return [tvl, tvc, tcl, tcc]
+endfunction
+
+function! scale#pair#GetPairCurrent(cursorPos, openPattern, closePattern)
+    let [cl, cc] = a:cursorPos
+    let [vl, vc] = [cl, cc]
+    let [tcl, tcc] = searchpos(a:closePattern, 'cWn', cl + 1)
+    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn', vl - 1)
+    let cursorOnClose = tcl == cl && tcc == cc
+    let cursorOnOpen = tvl == vl && tvc == vc
+    if !cursorOnClose
+        let [cl, cc] = searchpos(a:closePattern, 'W')
+    endif
+    call cursor(vl, vc)
+    if !cursorOnOpen
+        let [vl, vc] = searchpos(a:openPattern, 'bW')
+    endif
+    return [vl, vc, cl ,cc]
 endfunction

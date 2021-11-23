@@ -21,17 +21,22 @@ let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)'
 " 13 - visual mode, backward, end, inner
 " 14 - visual mode, forward, start, inner
 " 15 - visual mode, backward, start, inner
-" 16 - visual mode, trim
-" 17 - visual mode, expand
-" 18 - op mode, forward, end
-" 19 - op mode, backward, end
-" 20 - op mode, forward, start
-" 21 - op mode, backward, start
-" 22 - op mode, forward, end, inner
-" 23 - op mode, backward, end, inner
-" 24 - op mode, forward, start, inner
-" 25 - op mode, backward, start, inner
-" 26 - op mode, current
+" 16 - visual mode, expand
+" 17 - visual mode, trim
+" 18 - visual mode, expand, inner
+" 19 - visual mode, trim, inner
+" 20 - op mode, forward, end
+" 21 - op mode, backward, end
+" 22 - op mode, forward, start
+" 23 - op mode, backward, start
+" 24 - op mode, forward, end, inner
+" 25 - op mode, backward, end, inner
+" 26 - op mode, forward, start, inner
+" 27 - op mode, backward, start, inner
+" 28 - op mode, current
+" 29 - op mode, current, inner
+" 30 - normal mode, current
+" 31 - normal mode, current, inner
 
 "Normal and visual mode move
 nmap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  0)<cr>
@@ -140,4 +145,22 @@ vmap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>
 vmap }<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  16)<cr>
 vmap {<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  17)<cr>
 vmap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
-vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>
+vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr
+
+"Current Cursor
+omap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
+omap iq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  29)<cr>
+nmap vaq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  30)<cr>
+nmap viq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  31)<cr>
+omap ab :<c-u>call txtObj#Current('scale#pair#GetPairs',  28)<cr>
+omap ib :<c-u>call txtObj#Current('scale#pair#GetPairs',  29)<cr>
+nmap vab :<c-u>call txtObj#Current('scale#pair#GetPairs',  30)<cr>
+nmap vib :<c-u>call txtObj#Current('scale#pair#GetPairs',  31)<cr>
+omap at :<c-u>call txtObj#Current('scale#tag#GetTags',  28)<cr>
+omap it :<c-u>call txtObj#Current('scale#tag#GetTags',  29)<cr>
+nmap vat :<c-u>call txtObj#Current('scale#tag#GetTags',  30)<cr>
+nmap vit :<c-u>call txtObj#Current('scale#tag#GetTags',  31)<cr>
+omap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  28)<cr>
+omap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  29)<cr>
+nmap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
+nmap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>

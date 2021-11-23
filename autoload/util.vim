@@ -71,3 +71,26 @@ function! util#MakeSelection(cursorPos)
     normal! v
     call cursor(cl, cc)
 endfunction
+
+function! util#GetQuoteDir(lineNum, col, quotePattern)
+    " cut line in left of, on and right of cursor
+    let line = getline(a:lineNum)
+    let left = a:col > 1 ? line[: a:col-2] : ""
+    let cursor = line[a:col-1]
+    " also test for escaped quotes
+    let cursor2 = a:col > 1 ? line[a:col-2 : a:col-1] : line[a:col-1]
+    let right = line[a:col :]
+
+    " how many delitimers left, on and right of cursor
+    " assuming current line starts with no quote
+    let leftC = len(split(left, a:quotePattern, 1)) - 1
+    let cc = len(split(cursor, a:quotePattern, 1)) - 1
+    let cc2 = len(split(cursor2, a:quotePattern, 1)) - 1
+    let rightC = len(split(right, a:quotePattern, 1)) - 1
+
+    let cursorOnQuote = cc == 1 && cc2 > 0 
+    " assume current line is inside quote if no quote is in the line at all
+    let quotingLeft = (leftC % 2 == 1) || (leftC == 0 && rightC == 0 && !cursorOnQuote)
+    let quotingRight = (rightC % 2 == 1) || (leftC == 0 && rightC == 0)
+    return [quotingLeft, quotingRight]
+endfunction

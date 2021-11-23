@@ -2,6 +2,7 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
+"           0 - current
 function! scale#space#GetSpaces(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [tvl, tvc, tcl, tcc] = a:cursorPos
@@ -39,6 +40,12 @@ function! scale#space#GetSpaces(cursorPos, scaleMode)
                 endif
             endif
         endif
+    elseif a:scaleMode == 3 || a:scaleMode == 4
+        let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+        if a:scaleMode == 4
+            let [cl, cc] = util#GetPrevPos(cl, cc)
+            let [vl, vc] = util#GetNextPos(vl, vc)
+        endif
     endif
     return [vl, vc, cl ,cc]
 endfunction
@@ -47,7 +54,7 @@ function! scale#space#GetSpace(scaleMode)
     let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     let [pattern1, pattern2] = ["", ""]
-    if a:scaleMode == 1 || a:scaleMode == -1
+    if a:scaleMode == 1 || a:scaleMode == -1 || a:scaleMode == 3
         if selectionForward
             let pattern1 = g:spacePatterns.last
             let pattern2 = g:spacePatterns.first
@@ -55,7 +62,7 @@ function! scale#space#GetSpace(scaleMode)
             let pattern1 = g:spacePatterns.first
             let pattern2 = g:spacePatterns.last
         endif
-    elseif a:scaleMode == 2 || a:scaleMode == -2
+    elseif a:scaleMode == 2 || a:scaleMode == -2 || a:scaleMode == 4
         if selectionForward
             let pattern1 = g:spacePatterns.first
             let pattern2 = g:spacePatterns.last
@@ -97,6 +104,18 @@ function! scale#space#GetSpace(scaleMode)
         if selectionForward
             let [vl, vc] = searchpos(pattern2, 'W')
         else
+            let [vl, vc] = searchpos(pattern2, 'bW')
+        endif
+    elseif a:scaleMode == 3 || a:scaleMode == 4
+        let [tcl, tcc] = searchpos(pattern1, 'cWn', cl + 1)
+        let [tvl, tvc] = searchpos(pattern2, 'bcWn', vl - 1)
+        let cursorOnClose = tcl == cl && tcc == cc
+        let cursorOnOpen = tvl == vl && tvc == vc
+        if !cursorOnClose
+            let [cl, cc] = searchpos(pattern1, 'W')
+        endif
+        call cursor(vl, vc)
+        if !cursorOnOpen
             let [vl, vc] = searchpos(pattern2, 'bW')
         endif
     endif

@@ -27,6 +27,10 @@ function! GetScaleMode(mode)
         return 2
     elseif a:mode == 19
         return -2
+    elseif a:mode == 28 || a:mode == 30
+        return 3
+    elseif a:mode == 29 || a:mode == 31
+        return 4
     endif
 endfunction
 
@@ -65,6 +69,10 @@ endfunction
 " 26 - op mode, forward, start, inner
 " 27 - op mode, backward, start, inner
 " 28 - op mode, current
+" 29 - op mode, current, inner
+" 30 - normal mode, current
+" 31 - normal mode, current, inner
+
 function! txtObj#Move(f, mode)
     let multiplier = v:count1
     let seekDir = GetSeekDir(a:mode)
@@ -131,4 +139,17 @@ function! txtObj#Scale(f, mode)
         endfor
     endif
     echom [vl, vc, cl ,cc]
+endfunction
+
+function! txtObj#Current(f, mode)
+    let [cl ,cc] = [line('.'), col('.')]
+    let scaleMode = GetScaleMode(a:mode)
+    normal! v
+    let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[cl, cc, cl, cc], scaleMode])
+    if tvl != 0
+        call util#MakeSelection([tvl, tvc, tcl, tcc])
+    else
+        call cursor(cl, cc)
+    endif
+    echom [tvl, tvc, tcl, tcc]
 endfunction

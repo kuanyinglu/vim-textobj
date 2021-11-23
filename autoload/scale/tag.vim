@@ -2,15 +2,16 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
+"           0 - current
 function! scale#tag#GetTags(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     let pattern = {}
-    if a:scaleMode == 1 || a:scaleMode == -1
+    if a:scaleMode == 1 || a:scaleMode == -1 || a:scaleMode == 3
         let pattern.closing = g:tagPatterns.ee
         let pattern.opening = g:tagPatterns.ss
     endif
-    if a:scaleMode == 2 || a:scaleMode == -2
+    if a:scaleMode == 2 || a:scaleMode == -2 || a:scaleMode == 4
         let pattern.closing = g:tagPatterns.se
         let pattern.opening = g:tagPatterns.es
     endif
@@ -43,6 +44,12 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
                     let [vl, vc] = util#GetPrevPos(vl, vc)
                 endif
             endif
+        endif
+    elseif a:scaleMode == 3 || a:scaleMode == 4
+        let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+        if a:scaleMode == 4
+            let [cl, cc] = util#GetPrevPos(cl, cc)
+            let [vl, vc] = util#GetNextPos(vl, vc)
         endif
     endif
     return [vl, vc, cl ,cc]

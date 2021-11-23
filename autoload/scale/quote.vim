@@ -2,6 +2,7 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
+"           0 - current
 function! scale#quote#GetQuotes(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
@@ -44,13 +45,19 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
                     endif
                 endif
             endif
+        elseif a:scaleMode == 3 || a:scaleMode == 4
+            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+            if a:scaleMode == 4
+                let [cl, cc] = util#GetPrevPos(cl, cc)
+                let [vl, vc] = util#GetNextPos(vl, vc)
+            endif
         endif
     endfor
     return [vl, vc, cl ,cc]
 endfunction
 
 function! scale#quote#GetOneQuote(quotePattern, scaleMode)
-    let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
+    let [vl, vc, cl, cc] = [line('v'), col('v'), line('.'), col('.')]
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if a:scaleMode == 1 || a:scaleMode == 2
         if a:scaleMode == 2
@@ -62,7 +69,8 @@ function! scale#quote#GetOneQuote(quotePattern, scaleMode)
                 let [vl, vc] = util#GetNextPos(vl, vc)
             endif
         endif
-        let [vl, vc, cl ,cc] = scale#quote#GetQuoteOutward([vl, vc, cl, cc], a:quotePattern)
+        let [vl, vc, cl, cc] = scale#quote#GetQuoteOutward([vl, vc, cl, cc], a:quotePattern)
+        
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
@@ -76,24 +84,42 @@ function! scale#quote#GetOneQuote(quotePattern, scaleMode)
                 let [vl, vc] = util#GetPrevPos(vl, vc)
             endif
         endif
-        let [vl, vc, cl ,cc] = scale#quote#GetQuoteInward([vl, vc, cl, cc], a:quotePattern)
+        let [vl, vc, cl, cc] = scale#quote#GetQuoteInward([vl, vc, cl, cc], a:quotePattern)
+        if vl == 0 || cl == 0
+            return [0, 0, 0, 0]
+        endif
+    elseif a:scaleMode == 3 || a:scaleMode == 4
+        let [vl, vc, cl, cc] = scale#quote#GetQuoteCurrent([cl, cc], a:quotePattern, a:scaleMode == 4)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
     endif
     return [vl, vc, cl ,cc]
 endfunction
+
 function! scale#quote#GetQuoteOutward(cursorPos, pattern)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if selectionForward
-        let [cl, cc] = searchpos(a:pattern, 'W')
+        let [cql, cqr] = util#GetQuoteDir(cl, cc, a:pattern)
+        let [vql, vqr] = util#GetQuoteDir(vl, vc, a:pattern)
+        if cqr || !vql
+            let [cl, cc] = searchpos(a:pattern, 'W')
+        endif
         call cursor(vl, vc)
-        let [vl, vc] = searchpos(a:pattern, 'bW')
+        if vql || !cqr
+            let [vl, vc] = searchpos(a:pattern, 'bW')
+        endif
     else
-        let [cl, cc] = searchpos(a:pattern, 'bW')
+        let [cql, cqr] = util#GetQuoteDir(cl, cc, a:pattern)
+        let [vql, vqr] = util#GetQuoteDir(vl, vc, a:pattern)
+        if cql || !vqr
+            let [cl, cc] = searchpos(a:pattern, 'bW')
+        endif
         call cursor(vl, vc)
-        let [vl, vc] = searchpos(a:pattern, 'W')
+        if vqr || !cql
+            let [vl, vc] = searchpos(a:pattern, 'W')
+        endif
     endif
     return [vl, vc, cl ,cc]
 endfunction
@@ -118,4 +144,18 @@ function! scale#quote#GetQuoteInward(cursorPos, pattern)
         endif
     endif
     return [tvl, tvc, tcl, tcc]
+endfunction
+
+function! scale#quote#GetQuoteCurrent(cursorPos, pattern, isInner)
+    let [cl, cc] = a:cursorPos
+    let [vl, vc] = [cl, cc]
+    let [ql, qr] = util#GetQuoteDir(cl, cc, a:pattern)
+    if qr
+        let [cl, cc] = searchpos(a:pattern, 'W')
+    endif
+    call cursor(vl, vc)
+    if ql
+        let [vl, vc] = searchpos(a:pattern, 'bW')
+    endif
+    return [vl, vc, cl ,cc]
 endfunction

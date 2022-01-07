@@ -2,8 +2,34 @@ let g:quotePatterns = ["'", '\(\\\)\@<!"', '`']
 let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '\[', 'closing': '\]' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
 let g:tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
 let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
-" -matches html start tags <\_[^/]\{-}\(=\)\@<!>
-" -matches htm end tags <\/\_[^/]\{-}\(=\)\@<!>
+
+let g:nonword = '[^a-zA-Z0-9\-_]'
+let g:word = '[a-zA-Z0-9\-_]'
+let g:lower = '[a-z]'
+let g:cap = '[A-Z]'
+let g:connector = '[\-_]'
+let g:other = '[0-9]'
+let subwordArray = [g:lower, g:cap, g:connector, g:other]
+let subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word 
+for i in [0, 1, 2, 3]
+    for j in [0, 1, 2, 3]
+        if j != i
+            let subwordOpening = subwordOpening . '\|\%(' . subwordArray[i] . '\)\@<=' . subwordArray[j]
+        endif
+    endfor
+endfor
+let subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@='  
+for i in [0, 1, 2, 3]
+    for j in [0, 1, 2, 3]
+        if j != i
+            let subwordClosing = subwordClosing . '\|' . subwordArray[i] . '\%(' . subwordArray[j] . '\)\@='
+        endif
+    endfor
+endfor
+
+let g:wordPatterns = { 'opening': '[a-zA-Z0-9_-]', 'closing': '[^a-zA-Z0-9_-]' }
+let g:subwordPatterns = { 'opening': g:subwordOpening, 'closing': g:subwordClosing }
+echom g:subwordPatterns
 
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end

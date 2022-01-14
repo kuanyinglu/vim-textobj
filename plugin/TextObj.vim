@@ -10,18 +10,19 @@ let g:cap = '[A-Z]'
 let g:connector = '[\-_]'
 let g:other = '[0-9]'
 let subwordArray = [g:lower, g:cap, g:connector, g:other]
-let subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word 
+let subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word . '\|\%(' . g:cap . '\)\@<=' . g:cap . '\%(' . g:lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
-        if j != i
+"Captial going into lower case is the same word
+        if j != i && !(i == 1 && j == 0)
             let subwordOpening = subwordOpening . '\|\%(' . subwordArray[i] . '\)\@<=' . subwordArray[j]
         endif
     endfor
 endfor
-let subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@='  
+let subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@=' . '\|' . g:cap . '\%(' . g:cap . g:lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
-        if j != i
+        if j != i && !(i == 1 && j == 0)
             let subwordClosing = subwordClosing . '\|' . subwordArray[i] . '\%(' . subwordArray[j] . '\)\@='
         endif
     endfor
@@ -121,6 +122,14 @@ vmap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  4)<cr>
 vmap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  5)<cr>
 vmap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  6)<cr>
 vmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  7)<cr>
+nmap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  0)<cr>
+nmap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  1)<cr>
+nmap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  2)<cr>
+nmap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  3)<cr>
+vmap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  4)<cr>
+vmap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  5)<cr>
+vmap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  6)<cr>
+vmap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  7)<cr>
 
 "Operator pending mode
 

@@ -3,6 +3,7 @@
 "           2 - expand, inner 
 "           -2 - shrink, inner
 "           3 - current
+"           4 - current, inner
 function! scale#pair#GetPairs(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos

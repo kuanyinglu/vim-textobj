@@ -30,7 +30,6 @@ endfor
 
 let g:wordPatterns = { 'opening': '[a-zA-Z0-9_-]', 'closing': '[^a-zA-Z0-9_-]' }
 let g:subwordPatterns = { 'opening': g:subwordOpening, 'closing': g:subwordClosing }
-echom g:subwordPatterns
 
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end
@@ -161,6 +160,10 @@ omap ]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 20)<cr>
 omap [<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 21)<cr>
 omap ]]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 22)<cr>
 omap [[<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 23)<cr>
+omap ]s :<c-u>call txtObj#Op('move#subword#GetSubWords',  20)<cr>
+omap [s :<c-u>call txtObj#Op('move#subword#GetSubWords',  21)<cr>
+omap ]S :<c-u>call txtObj#Op('move#subword#GetSubWords',  22)<cr>
+omap [S :<c-u>call txtObj#Op('move#subword#GetSubWords',  23)<cr>
 
 "Expand, shrink
 map { <nop>
@@ -180,7 +183,9 @@ vmap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>
 vmap }<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  16)<cr>
 vmap {<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  17)<cr>
 vmap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
-vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr
+vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>
+vmap }s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  16)<cr>
+vmap {s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  17)<cr>
 
 "Current Cursor
 omap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
@@ -199,3 +204,5 @@ omap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  28)<cr>
 omap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  29)<cr>
 nmap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
 nmap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
+omap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  28)<cr>
+nmap vs :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>

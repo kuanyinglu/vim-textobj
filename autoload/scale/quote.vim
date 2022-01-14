@@ -2,7 +2,8 @@
 "           -1 - shrink, end
 "           2 - expand, inner 
 "           -2 - shrink, inner
-"           0 - current
+"           3 - current
+"           4 - current, inner
 function! scale#quote#GetQuotes(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos

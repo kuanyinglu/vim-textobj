@@ -9,26 +9,28 @@ let g:lower = '[a-z]'
 let g:cap = '[A-Z]'
 let g:connector = '[\-_]'
 let g:other = '[0-9]'
-let subwordArray = [g:lower, g:cap, g:connector, g:other]
-let subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word . '\|\%(' . g:cap . '\)\@<=' . g:cap . '\%(' . g:lower . '\)\@='
+let g:subwordArray = [g:lower, g:cap, g:connector, g:other]
+let g:subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word . '\|\%(' . g:cap . '\)\@<=' . g:cap . '\%(' . g:lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
 "Captial going into lower case is the same word
         if j != i && !(i == 1 && j == 0)
-            let subwordOpening = subwordOpening . '\|\%(' . subwordArray[i] . '\)\@<=' . subwordArray[j]
+            let g:subwordOpening = g:subwordOpening . '\|\%(' . g:subwordArray[i] . '\)\@<=' . g:subwordArray[j]
         endif
     endfor
 endfor
-let subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@=' . '\|' . g:cap . '\%(' . g:cap . g:lower . '\)\@='
+let g:subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@=' . '\|' . g:cap . '\%(' . g:cap . g:lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
         if j != i && !(i == 1 && j == 0)
-            let subwordClosing = subwordClosing . '\|' . subwordArray[i] . '\%(' . subwordArray[j] . '\)\@='
+            let g:subwordClosing = g:subwordClosing . '\|' . g:subwordArray[i] . '\%(' . g:subwordArray[j] . '\)\@='
         endif
     endfor
 endfor
 
-let g:wordPatterns = { 'opening': '[a-zA-Z0-9_-]', 'closing': '[^a-zA-Z0-9_-]' }
+let wordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word
+let wordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@='
+let g:wordPatterns = { 'opening': g:wordOpening, 'closing': g:wordClosing }
 let g:subwordPatterns = { 'opening': g:subwordOpening, 'closing': g:subwordClosing }
 
 " 0 - normal mode, forward, end
@@ -129,6 +131,14 @@ vmap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  4)<cr>
 vmap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  5)<cr>
 vmap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  6)<cr>
 vmap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  7)<cr>
+nmap ]w :<c-u>call txtObj#Move('move#word#GetWords',  0)<cr>
+nmap [w :<c-u>call txtObj#Move('move#word#GetWords',  1)<cr>
+nmap ]W :<c-u>call txtObj#Move('move#word#GetWords',  2)<cr>
+nmap [W :<c-u>call txtObj#Move('move#word#GetWords',  3)<cr>
+vmap ]w :<c-u>call txtObj#Move('move#word#GetWords',  4)<cr>
+vmap [w :<c-u>call txtObj#Move('move#word#GetWords',  5)<cr>
+vmap ]W :<c-u>call txtObj#Move('move#word#GetWords',  6)<cr>
+vmap [W :<c-u>call txtObj#Move('move#word#GetWords',  7)<cr>
 
 "Operator pending mode
 
@@ -164,6 +174,10 @@ omap ]s :<c-u>call txtObj#Op('move#subword#GetSubWords',  20)<cr>
 omap [s :<c-u>call txtObj#Op('move#subword#GetSubWords',  21)<cr>
 omap ]S :<c-u>call txtObj#Op('move#subword#GetSubWords',  22)<cr>
 omap [S :<c-u>call txtObj#Op('move#subword#GetSubWords',  23)<cr>
+omap ]w :<c-u>call txtObj#Op('move#word#GetWords',  20)<cr>
+omap [w :<c-u>call txtObj#Op('move#word#GetWords',  21)<cr>
+omap ]W :<c-u>call txtObj#Op('move#word#GetWords',  22)<cr>
+omap [W :<c-u>call txtObj#Op('move#word#GetWords',  23)<cr>
 
 "Expand, shrink
 map { <nop>
@@ -186,6 +200,8 @@ vmap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
 vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>
 vmap }s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  16)<cr>
 vmap {s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  17)<cr>
+vmap }w :<c-u>call txtObj#Scale('scale#word#GetWords',  16)<cr>
+vmap {w :<c-u>call txtObj#Scale('scale#word#GetWords',  17)<cr>
 
 "Current Cursor
 omap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
@@ -206,3 +222,5 @@ nmap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
 nmap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
 omap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  28)<cr>
 nmap vs :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>
+omap w :<c-u>call txtObj#Current('scale#word#GetWords',  28)<cr>
+nmap vw :<c-u>call txtObj#Current('scale#word#GetWords',  30)<cr>

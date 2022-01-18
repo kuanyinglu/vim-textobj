@@ -1,11 +1,11 @@
 " scaleMode 1 - expand, end
 "           -1 - shrink, end
 "           3 - current
-function! scale#subword#GetSubWords(cursorPos, scaleMode)
+function! scale#word#GetWords(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     call util#MakeSelection(a:cursorPos)
-    let [tvl, tvc, tcl, tcc] = scale#subword#GetSubWord(g:subwordPatterns, a:scaleMode)
+    let [tvl, tvc, tcl, tcc] = scale#word#GetWord(g:wordPatterns, a:scaleMode)
     if tvl == 0 || tcl == 0
         return [0, 0, 0, 0]
     endif
@@ -25,21 +25,21 @@ function! scale#subword#GetSubWords(cursorPos, scaleMode)
     return [vl, vc, cl ,cc]
 endfunction
 
-function! scale#subword#GetSubWord(subwordPatterns, scaleMode)
+function! scale#word#GetWord(wordPatterns, scaleMode)
     let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if a:scaleMode == 1
-        let [vl, vc, cl ,cc] = scale#subword#GetSubWordOutward([vl, vc, cl, cc], a:subwordPatterns.opening, a:subwordPatterns.closing)
+        let [vl, vc, cl ,cc] = scale#word#GetWordOutward([vl, vc, cl, cc], a:wordPatterns.opening, a:wordPatterns.closing)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
     elseif a:scaleMode == -1
-        let [vl, vc, cl ,cc] = scale#subword#GetSubWordInward([vl, vc, cl, cc], a:subwordPatterns.opening, a:subwordPatterns.closing)
+        let [vl, vc, cl ,cc] = scale#word#GetWordInward([vl, vc, cl, cc], a:wordPatterns.opening, a:wordPatterns.closing)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
     elseif a:scaleMode == 3
-        let [vl, vc, cl ,cc] = scale#subword#GetSubWordCurrent([cl, cc], a:subwordPatterns.opening, a:subwordPatterns.closing)
+        let [vl, vc, cl ,cc] = scale#word#GetWordCurrent([cl, cc], a:wordPatterns.opening, a:wordPatterns.closing)
         if vl == 0 || cl == 0
             return [0, 0, 0, 0]
         endif
@@ -47,7 +47,7 @@ function! scale#subword#GetSubWord(subwordPatterns, scaleMode)
     return [vl, vc, cl ,cc]
 endfunction
 
-function! scale#subword#GetSubWordOutward(cursorPos, openPattern, closePattern)
+function! scale#word#GetWordOutward(cursorPos, openPattern, closePattern)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if selectionForward
@@ -62,7 +62,7 @@ function! scale#subword#GetSubWordOutward(cursorPos, openPattern, closePattern)
     return [vl, vc, cl ,cc]
 endfunction
 
-function! scale#subword#GetSubWordInward(cursorPos, openPattern, closePattern)
+function! scale#word#GetWordInward(cursorPos, openPattern, closePattern)
     let [vl, vc, cl, cc] = a:cursorPos
     let [tvl, tvc, tcl, tcc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
@@ -84,7 +84,7 @@ function! scale#subword#GetSubWordInward(cursorPos, openPattern, closePattern)
     return [tvl, tvc, tcl, tcc]
 endfunction
 
-function! scale#subword#GetSubWordCurrent(cursorPos, openPattern, closePattern)
+function! scale#word#GetWordCurrent(cursorPos, openPattern, closePattern)
     let [cl, cc] = a:cursorPos
     let [vl, vc] = [cl, cc]
     let [tcl, tcc] = searchpos(a:closePattern, 'cWn')

@@ -49,10 +49,14 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
             endif
             continue
         elseif a:scaleMode == 3 || a:scaleMode == 4
-            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-            if a:scaleMode == 4
-                let [cl, cc] = util#GetPrevPos(cl, cc)
-                let [vl, vc] = util#GetNextPos(vl, vc)
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let closerSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
+            if firstSelection || closerSelection
+                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+                if a:scaleMode == 4
+                    let [cl, cc] = util#GetPrevPos(cl, cc)
+                    let [vl, vc] = util#GetNextPos(vl, vc)
+                endif
             endif
         endif
     endfor
@@ -139,8 +143,8 @@ endfunction
 function! scale#pair#GetPairCurrent(cursorPos, openPattern, closePattern)
     let [cl, cc] = a:cursorPos
     let [vl, vc] = [cl, cc]
-    let [tcl, tcc] = searchpos(a:closePattern, 'cWn', cl + 1)
-    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn', vl - 1)
+    let [tcl, tcc] = searchpos(a:closePattern, 'cWn')
+    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn')
     let cursorOnClose = tcl == cl && tcc == cc
     let cursorOnOpen = tvl == vl && tvc == vc
     if !cursorOnClose

@@ -87,8 +87,8 @@ endfunction
 function! scale#subword#GetSubWordCurrent(cursorPos, openPattern, closePattern)
     let [cl, cc] = a:cursorPos
     let [vl, vc] = [cl, cc]
-    let [tcl, tcc] = searchpos(a:closePattern, 'cWn', cl + 1)
-    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn', vl - 1)
+    let [tcl, tcc] = searchpos(a:closePattern, 'cWn')
+    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn')
     let cursorOnClose = tcl == cl && tcc == cc
     let cursorOnOpen = tvl == vl && tvc == vc
     if !cursorOnClose

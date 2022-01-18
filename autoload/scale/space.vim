@@ -57,19 +57,19 @@ function! scale#space#GetSpace(scaleMode)
     let [pattern1, pattern2] = ["", ""]
     if a:scaleMode == 1 || a:scaleMode == -1 || a:scaleMode == 3
         if selectionForward
-            let pattern1 = g:spacePatterns.last
-            let pattern2 = g:spacePatterns.first
+            let pattern1 = g:TextObj_spacePatterns.last
+            let pattern2 = g:TextObj_spacePatterns.first
         else
-            let pattern1 = g:spacePatterns.first
-            let pattern2 = g:spacePatterns.last
+            let pattern1 = g:TextObj_spacePatterns.first
+            let pattern2 = g:TextObj_spacePatterns.last
         endif
     elseif a:scaleMode == 2 || a:scaleMode == -2 || a:scaleMode == 4
         if selectionForward
-            let pattern1 = g:spacePatterns.first
-            let pattern2 = g:spacePatterns.last
+            let pattern1 = g:TextObj_spacePatterns.first
+            let pattern2 = g:TextObj_spacePatterns.last
         else
-            let pattern1 = g:spacePatterns.last
-            let pattern2 = g:spacePatterns.first
+            let pattern1 = g:TextObj_spacePatterns.last
+            let pattern2 = g:TextObj_spacePatterns.first
         endif
     endif
     if a:scaleMode == 2 || a:scaleMode == -2

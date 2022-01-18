@@ -5,7 +5,7 @@
 function! move#subword#GetSubWords(cursorPos, seekDir)
     let [rl, rc] = [0, 0]
     let [cl, cc] = a:cursorPos
-    let pattern = g:subwordPatterns
+    let pattern = g:TextObj_subwordPatterns
     call cursor(cl, cc)
     let [trl, trc] = move#subword#GetSubWord(pattern, a:seekDir)
     if a:seekDir == 1 || a:seekDir == 2

@@ -1,37 +1,37 @@
-let g:quotePatterns = ["'", '\(\\\)\@<!"', '`']
-let g:blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '\[', 'closing': '\]' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
-let g:tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
-let g:spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
+let g:TextObj_spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
+let g:TextObj_quotePatterns = ["'", '\(\\\)\@<!"', '`']
+let g:TextObj_blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '\[', 'closing': '\]' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
+let g:TextObj_tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
 
-let g:nonword = '[^a-zA-Z0-9\-_]'
-let g:word = '[a-zA-Z0-9\-_]'
-let g:lower = '[a-z]'
-let g:cap = '[A-Z]'
-let g:connector = '[\-_]'
-let g:other = '[0-9]'
-let g:subwordArray = [g:lower, g:cap, g:connector, g:other]
-let g:subwordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word . '\|\%(' . g:cap . '\)\@<=' . g:cap . '\%(' . g:lower . '\)\@='
+let g:TextObj_constant_nonword = '[^a-zA-Z0-9\-_]'
+let g:TextObj_constant_word = '[a-zA-Z0-9\-_]'
+let g:TextObj_constant_lower = '[a-z]'
+let g:TextObj_constant_cap = '[A-Z]'
+let g:TextObj_constant_connector = '[\-_]'
+let g:TextObj_constant_number = '[0-9]'
+let s:subwordArray = [g:TextObj_constant_lower, g:TextObj_constant_cap, g:TextObj_constant_connector, g:TextObj_constant_number]
+let s:subwordOpening = '\%^' . g:TextObj_constant_word . '\|' . '\%([\n]\)\@<=' . g:TextObj_constant_word . '\|\%(' . g:TextObj_constant_nonword . '\)\@<=' . g:TextObj_constant_word . '\|\%(' . g:TextObj_constant_cap . '\)\@<=' . g:TextObj_constant_cap . '\%(' . g:TextObj_constant_lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
 "Captial going into lower case is the same word
         if j != i && !(i == 1 && j == 0)
-            let g:subwordOpening = g:subwordOpening . '\|\%(' . g:subwordArray[i] . '\)\@<=' . g:subwordArray[j]
+            let s:subwordOpening = s:subwordOpening . '\|\%(' . s:subwordArray[i] . '\)\@<=' . s:subwordArray[j]
         endif
     endfor
 endfor
-let g:subwordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@=' . '\|' . g:cap . '\%(' . g:cap . g:lower . '\)\@='
+let s:subwordClosing = g:TextObj_constant_word . '\%$' . '\|' . g:TextObj_constant_word . '\%([\n]\)\@=' . '\|' . g:TextObj_constant_word . '\%(' . g:TextObj_constant_nonword . '\)\@=' . '\|' . g:TextObj_constant_cap . '\%(' . g:TextObj_constant_cap . g:TextObj_constant_lower . '\)\@='
 for i in [0, 1, 2, 3]
     for j in [0, 1, 2, 3]
         if j != i && !(i == 1 && j == 0)
-            let g:subwordClosing = g:subwordClosing . '\|' . g:subwordArray[i] . '\%(' . g:subwordArray[j] . '\)\@='
+            let s:subwordClosing = s:subwordClosing . '\|' . s:subwordArray[i] . '\%(' . s:subwordArray[j] . '\)\@='
         endif
     endfor
 endfor
 
-let wordOpening = '\%^' . g:word . '\|' . '\%([\n]\)\@<=' . g:word . '\|\%(' . g:nonword . '\)\@<=' . g:word
-let wordClosing = g:word . '\%$' . '\|' . g:word . '\%([\n]\)\@=' . '\|' . g:word . '\%(' . g:nonword . '\)\@='
-let g:wordPatterns = { 'opening': g:wordOpening, 'closing': g:wordClosing }
-let g:subwordPatterns = { 'opening': g:subwordOpening, 'closing': g:subwordClosing }
+let s:wordOpening = '\%^' . g:TextObj_constant_word . '\|' . '\%([\n]\)\@<=' . g:TextObj_constant_word . '\|\%(' . g:TextObj_constant_nonword . '\)\@<=' . g:TextObj_constant_word
+let s:wordClosing = g:TextObj_constant_word . '\%$' . '\|' . g:TextObj_constant_word . '\%([\n]\)\@=' . '\|' . g:TextObj_constant_word . '\%(' . g:TextObj_constant_nonword . '\)\@='
+let g:TextObj_wordPatterns = { 'opening': s:wordOpening, 'closing': s:wordClosing }
+let g:TextObj_subwordPatterns = { 'opening': s:subwordOpening, 'closing': s:subwordClosing }
 
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end

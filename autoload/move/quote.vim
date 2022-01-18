@@ -9,7 +9,7 @@
 function! move#quote#GetQuotes(cursorPos, seekDir)
     let [rl, rc] = [0, 0]
     let [cl, cc] = a:cursorPos
-    for pattern in g:quotePatterns
+    for pattern in g:TextObj_quotePatterns
         call cursor(cl, cc)
         let [trl, trc] = move#quote#GetOneQuote(pattern, a:seekDir)
         if a:seekDir >= 1 || a:seekDir <= 4

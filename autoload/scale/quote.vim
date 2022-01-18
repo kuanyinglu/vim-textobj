@@ -8,7 +8,7 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
-    for pattern in g:quotePatterns
+    for pattern in g:TextObj_quotePatterns
         call util#MakeSelection(a:cursorPos)
         let [tvl, tvc, tcl, tcc] = scale#quote#GetOneQuote(pattern, a:scaleMode)
         if tvl == 0 || tcl == 0

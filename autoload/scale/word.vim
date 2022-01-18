@@ -5,7 +5,7 @@ function! scale#word#GetWords(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     call util#MakeSelection(a:cursorPos)
-    let [tvl, tvc, tcl, tcc] = scale#word#GetWord(g:wordPatterns, a:scaleMode)
+    let [tvl, tvc, tcl, tcc] = scale#word#GetWord(g:TextObj_wordPatterns, a:scaleMode)
     if tvl == 0 || tcl == 0
         return [0, 0, 0, 0]
     endif

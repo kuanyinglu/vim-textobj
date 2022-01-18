@@ -9,12 +9,12 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     let pattern = {}
     if a:scaleMode == 1 || a:scaleMode == -1 || a:scaleMode == 3
-        let pattern.closing = g:tagPatterns.ee
-        let pattern.opening = g:tagPatterns.ss
+        let pattern.closing = g:TextObj_tagPatterns.ee
+        let pattern.opening = g:TextObj_tagPatterns.ss
     endif
     if a:scaleMode == 2 || a:scaleMode == -2 || a:scaleMode == 4
-        let pattern.closing = g:tagPatterns.se
-        let pattern.opening = g:tagPatterns.es
+        let pattern.closing = g:TextObj_tagPatterns.se
+        let pattern.opening = g:TextObj_tagPatterns.es
     endif
     call cursor(cl, cc)
     let [tvl, tvc, tcl, tcc] = scale#pair#GetPair(pattern, a:scaleMode)

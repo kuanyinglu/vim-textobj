@@ -12,14 +12,14 @@ function! move#tag#GetTags(cursorPos, seekDir)
     let [cl, cc] = a:cursorPos
     let pattern = {}
     if a:seekDir == 1 || a:seekDir == -2
-        let pattern.closing = g:tagPatterns.ee
+        let pattern.closing = g:TextObj_tagPatterns.ee
     else
-        let pattern.closing = g:tagPatterns.se
+        let pattern.closing = g:TextObj_tagPatterns.se
     endif
     if a:seekDir == -1 || a:seekDir == 2
-        let pattern.opening = g:tagPatterns.ss
+        let pattern.opening = g:TextObj_tagPatterns.ss
     else
-        let pattern.opening = g:tagPatterns.es
+        let pattern.opening = g:TextObj_tagPatterns.es
     endif
     call cursor(cl, cc)
     let [trl, trc] = move#pair#GetPair(pattern, a:seekDir)

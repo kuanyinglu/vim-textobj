@@ -9,7 +9,7 @@
 function! move#pair#GetPairs(cursorPos, seekDir)
     let [rl, rc] = [0, 0]
     let [cl, cc] = a:cursorPos
-    for pattern in g:blockPatterns
+    for pattern in g:TextObj_blockPatterns
         call cursor(cl, cc)
         let [trl, trc] = move#pair#GetPair(pattern, a:seekDir)
         if a:seekDir == 1 || a:seekDir == 2 || a:seekDir == 3 || a:seekDir == 4

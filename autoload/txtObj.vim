@@ -1,3 +1,35 @@
+" 0 - normal mode, forward, end
+" 1 - normal mode, backward, end
+" 2 - normal mode, forward, start
+" 3 - normal mode, backward, start
+" 4 - visual mode, forward, end
+" 5 - visual mode, backward, end
+" 6 - visual mode, forward, start
+" 7 - visual mode, backward, start
+" 8 - normal mode, forward, end, inner
+" 9 - normal mode, backward, end, inner
+" 10 - normal mode, forward, start, inner
+" 11 - normal mode, backward, start, inner
+" 12 - visual mode, forward, end, inner
+" 13 - visual mode, backward, end, inner
+" 14 - visual mode, forward, start, inner
+" 15 - visual mode, backward, start, inner
+" 16 - visual mode, expand
+" 17 - visual mode, trim
+" 18 - visual mode, expand, inner
+" 19 - visual mode, trim, inner
+" 20 - op mode, forward, end
+" 21 - op mode, backward, end
+" 22 - op mode, forward, start
+" 23 - op mode, backward, start
+" 24 - op mode, forward, end, inner
+" 25 - op mode, backward, end, inner
+" 26 - op mode, forward, start, inner
+" 27 - op mode, backward, start, inner
+" 28 - op mode, current
+" 29 - op mode, current, inner
+" 30 - normal mode, current
+" 31 - normal mode, current, inner
 function! GetSeekDir(mode)
     if a:mode == 0 || a:mode == 4 || a:mode == 20
         return 1
@@ -39,39 +71,6 @@ function! SetupCursor(mode)
         normal! gv
     endif
 endfunction
-
-" 0 - normal mode, forward, end
-" 1 - normal mode, backward, end
-" 2 - normal mode, forward, start
-" 3 - normal mode, backward, start
-" 4 - visual mode, forward, end
-" 5 - visual mode, backward, end
-" 6 - visual mode, forward, start
-" 7 - visual mode, backward, start
-" 8 - normal mode, forward, end, inner
-" 9 - normal mode, backward, end, inner
-" 10 - normal mode, forward, start, inner
-" 11 - normal mode, backward, start, inner
-" 12 - visual mode, forward, end, inner
-" 13 - visual mode, backward, end, inner
-" 14 - visual mode, forward, start, inner
-" 15 - visual mode, backward, start, inner
-" 16 - visual mode, expand
-" 17 - visual mode, trim
-" 18 - visual mode, expand, inner
-" 19 - visual mode, trim, inner
-" 20 - op mode, forward, end
-" 21 - op mode, backward, end
-" 22 - op mode, forward, start
-" 23 - op mode, backward, start
-" 24 - op mode, forward, end, inner
-" 25 - op mode, backward, end, inner
-" 26 - op mode, forward, start, inner
-" 27 - op mode, backward, start, inner
-" 28 - op mode, current
-" 29 - op mode, current, inner
-" 30 - normal mode, current
-" 31 - normal mode, current, inner
 
 function! txtObj#Move(f, mode)
     let multiplier = v:count1

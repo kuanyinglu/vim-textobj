@@ -1,7 +1,7 @@
 let g:TextObj_spacePatterns = { 'first': '\(\(\S\)\@<=\s\{-1}\)\|\(\(\_^\)\@<=\s\{-1}\)', 'last': '\zs\s\{-1}\ze\_S' }
 let g:TextObj_quotePatterns = ["'", '\(\\\)\@<!"', '`']
 let g:TextObj_blockPatterns = [{ 'opening': '{', 'closing': '}' }, { 'opening': '\[', 'closing': '\]' }, { 'opening': '<', 'closing': '\(=\)\@<!>' }, { 'opening': '(', 'closing': ')' }]
-let g:TextObj_tagPatterns = { 'es': '<\_[^/]\{-}\(=\)\@<!\zs>', 'se': '<\ze\/\_[^/]\{-}\(=\)\@<!>', 'ss': '<\ze\_[^/]\{-}\(=\)\@<!>', 'ee': '<\/\_[^/]\{-}\(=\)\@<!\zs>' }
+let g:TextObj_tagPatterns = { 'tagOpening': '<[^ \t>/!?]\+\%(\_s\_[^>]\{-}[^/]>\|\_s\=>\)', 'endTagName': '<\/\=[^ \t>/!]\+\zs[^ \t>/!]\ze[>]\{-,1}', 'tagClosing' : '<\/[^ \t>/!]\+\%(\_s\_[^>]\{-}[^/]>\|\_s\=>\)'}
 
 let g:TextObj_constant_nonword = '[^a-zA-Z0-9\-_]'
 let g:TextObj_constant_word = '[a-zA-Z0-9\-_]'

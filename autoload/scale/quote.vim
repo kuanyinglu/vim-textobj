@@ -15,36 +15,36 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
             continue
         endif
         if a:scaleMode == 1 || a:scaleMode == 2
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
-            let validSelection = (selectionForward && (tcl > ocl || (tcl == ocl && tcc > occ))) || (!selectionForward && (tvl > ovl || (tvl == ovl && tvc > ovc)))
-            let closerSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
-            if (validSelection && firstSelection) || (validSelection && closerSelection)
-                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-                if a:scaleMode == 2
-                    if selectionForward
-                        let [cl, cc] = util#GetPrevPos(cl, cc)
-                        let [vl, vc] = util#GetNextPos(vl, vc)
-                    else
-                        let [cl, cc] = util#GetNextPos(cl, cc)
-                        let [vl, vc] = util#GetPrevPos(vl, vc)
-                    endif
+            if a:scaleMode == 2
+                if selectionForward
+                    let [tcl, tcc] = util#GetPrevPos(tcl, tcc)
+                    let [tvl, tvc] = util#GetNextPos(tvl, tvc)
+                else
+                    let [tcl, tcc] = util#GetNextPos(tcl, tcc)
+                    let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
             endif
-        elseif a:scaleMode == -1 || a:scaleMode == -2
             let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
-            let validSelection = (selectionForward && (tcl < ocl || (tcl == ocl && tcc < occ))) || (!selectionForward && (tvl < ovl || (tvl == ovl && tvc < ovc)))
-            let closerSelection = (selectionForward && (tcl > cl || (tcl == cl && tcc > cc))) || (!selectionForward && (tvl > vl || (tvl == vl && tvc > vc)))
+            let validSelection = (selectionForward && ((tcl > ocl || (tcl == ocl && tcc > occ)) || (tvl < ovl || (tvl == ovl && tvc < ovc)))) || (!selectionForward && ((tvl > ovl || (tvl == ovl && tvc > ovc)) || (tcl < ocl || (tcl == ocl && tcc < occ))))
+            let closerSelection = (selectionForward && ((tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc)))) || (!selectionForward && ((tvl < vl || (tvl == vl && tvc < vc)) || (tcl > cl || (tcl == cl && tcc > cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-                if a:scaleMode == -2
-                    if selectionForward
-                        let [cl, cc] = util#GetPrevPos(cl, cc)
-                        let [vl, vc] = util#GetNextPos(vl, vc)
-                    else
-                        let [cl, cc] = util#GetNextPos(cl, cc)
-                        let [vl, vc] = util#GetPrevPos(vl, vc)
-                    endif
+            endif
+        elseif a:scaleMode == -1 || a:scaleMode == -2
+            if a:scaleMode == -2
+                if selectionForward
+                    let [tcl, tcc] = util#GetPrevPos(tcl, tcc)
+                    let [tvl, tvc] = util#GetNextPos(tvl, tvc)
+                else
+                    let [tcl, tcc] = util#GetNextPos(tcl, tcc)
+                    let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
+            endif
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let validSelection = (selectionForward && ((tcl < ocl || (tcl == ocl && tcc < occ)) || (tvl > ovl || (tvl == ovl && tvc > ovc)))) || (!selectionForward && ((tvl < ovl || (tvl == ovl && tvc < ovc)) || (tcl > ocl || (tcl == ocl && tcc > occ))))
+            let closerSelection = (selectionForward && ((tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc)))) || (!selectionForward && ((tvl < vl || (tvl == vl && tvc < vc)) || (tcl > cl || (tcl == cl && tcc > cc))))
+            if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
         elseif a:scaleMode == 3 || a:scaleMode == 4
             let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]

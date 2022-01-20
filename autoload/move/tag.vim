@@ -42,6 +42,5 @@ function! move#tag#GetTags(cursorPos, seekDir)
             endif
         endif
     else
-    endif
     return [rl, rc]
 endfunction

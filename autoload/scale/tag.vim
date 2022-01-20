@@ -42,15 +42,20 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
             endif
             let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && ((tcl < ocl || (tcl == ocl && tcc < occ)) || (tvl > ovl || (tvl == ovl && tvc > ovc)))) || (!selectionForward && ((tvl < ovl || (tvl == ovl && tvc < ovc)) || (tcl > ocl || (tcl == ocl && tcc > occ))))
-            let closerSelection = (selectionForward && ((tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc)))) || (!selectionForward && ((tvl < vl || (tvl == vl && tvc < vc)) || (tcl > cl || (tcl == cl && tcc > cc))))
+            let closerSelection = (selectionForward && ((tcl > cl || (tcl == cl && tcc > cc)) || (tvl < vl || (tvl == vl && tvc < vc)))) || (!selectionForward && ((tvl > vl || (tvl == vl && tvc > vc)) || (tcl < cl || (tcl == cl && tcc < cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
         elseif a:scaleMode == 3 || a:scaleMode == 4
-            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-            if a:scaleMode == 4
-                let [cl, cc] = util#GetPrevPos(cl, cc)
-                let [vl, vc] = util#GetNextPos(vl, vc)
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let validSelection = (tcl > ocl || (tcl == ocl && tcc >= occ)) && (tvl < ovl || (tvl == ovl && tvc <= ovc))
+            let closerSelection = (tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc))
+            if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+                if a:scaleMode == 4
+                    let [cl, cc] = util#GetPrevPos(cl, cc)
+                    let [vl, vc] = util#GetNextPos(vl, vc)
+                endif
             endif
         endif
     endfor
@@ -119,31 +124,68 @@ function! scale#tag#GetTagInward(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
     if selectionForward
-        let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'W'), a:scaleMode))
+        let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'cW'), a:scaleMode))
         call cursor(cl, vc)
         let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'bW'), a:scaleMode))
         call cursor(vl, vc)
-        let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'bW'), a:scaleMode))
+        let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'cbW'), a:scaleMode))
         call cursor(vl, vc)
         let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'W'), a:scaleMode))
     else
-        let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'bW'), a:scaleMode))
+        let [sl, sc, el, ec] = scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'cbW'), a:scaleMode)
+        let list = add(list, [el, ec, sl, sc])
         call cursor(cl, vc)
-        let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'W'), a:scaleMode))
+        let [sl, sc, el, ec] = scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'W'), a:scaleMode)
+        let list = add(list, [el, ec, sl, sc])
         call cursor(vl, vc)
-        let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'W'), a:scaleMode))
+        let [sl, sc, el, ec] = scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'cW'), a:scaleMode)
+        let list = add(list, [el, ec, sl, sc])
         call cursor(vl, vc)
-        let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'bW'), a:scaleMode))
+        let [sl, sc, el, ec] = scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'bW'), a:scaleMode)
+        let list = add(list, [el, ec, sl, sc])
     endif
     return list
 endfunction
 
 function! scale#tag#GetTagCurrent(cursorPos, scaleMode)
     let list = []
-    let [vl, vc, cl, cc] = a:cursorPos
-    let list = add(list, scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, 'cW'), a:scaleMode))
-    call cursor(cl, cc)
-    let list = add(list, scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, 'cbW'), a:scaleMode))
+    let [_, _, cl, cc] = a:cursorPos
+    let [_, _, ocl, occ] = a:cursorPos
+    let done = 0
+    let firstRun = 0
+    while done < 1
+        let flag = 'W'
+        if firstRun == 0
+            let flag = 'cW'
+            let firstRun = 1
+        endif
+        let [sl, sc, el, ec] = scale#tag#GetStartTag(searchpos(g:TextObj_tagPatterns.tagClosing, flag), a:scaleMode)
+        if (sl < ocl || (sl == ocl && sc <= occ)) && (el > ocl || (el == ocl && ec >= occ))
+            let list = add(list, [sl, sc, el, ec])
+            let done += 1
+        elseif sl == 0 || el == 0
+            let done += 1
+        endif
+    endwhile
+
+    call cursor(ocl, occ)
+    let [sl, sc, el, ec] = [ocl, occ, ocl, occ] 
+    let done = 0
+    let firstRun = 0
+    while done < 1
+        let flag = 'bW'
+        if firstRun == 0
+            let flag = 'cbW'
+            let firstRun = 1
+        endif
+        let [sl, sc, el, ec] = scale#tag#GetEndTag(searchpos(g:TextObj_tagPatterns.tagOpening, flag), a:scaleMode)
+        if (sl < ocl || (sl == ocl && sc <= occ)) && (el > ocl || (el == ocl && ec >= occ))
+            let list = add(list, [sl, sc, el, ec])
+            let done += 1
+        elseif sl == 0 || el == 0
+            let done += 1
+        endif
+    endwhile
     return list
 endfunction
 

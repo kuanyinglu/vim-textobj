@@ -3,7 +3,7 @@
 "           2 - forward, start
 "           -2 - backward, start
 "           3 - forward, end, inner
-"           -3 - backward, start, inner
+"           -3 - backward, end, inner
 "           4 - forward, start, inner
 "           -4 backward, start, inner
 function! move#pair#GetPairs(cursorPos, seekDir)

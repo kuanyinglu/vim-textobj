@@ -20,7 +20,10 @@ function! scale#word#GetWords(cursorPos, scaleMode)
             let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
         endif
     elseif a:scaleMode == 3
-        let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+        let validSelection = tcl > cl || (tcl == cl && tcc > cc)
+        if validSelection
+            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+        endif
     endif
     return [vl, vc, cl ,cc]
 endfunction
@@ -87,16 +90,19 @@ endfunction
 function! scale#word#GetWordCurrent(cursorPos, openPattern, closePattern)
     let [cl, cc] = a:cursorPos
     let [vl, vc] = [cl, cc]
-    let [tcl, tcc] = searchpos(a:closePattern, 'cWn')
-    let [tvl, tvc] = searchpos(a:openPattern, 'bcWn')
-    let cursorOnClose = tcl == cl && tcc == cc
-    let cursorOnOpen = tvl == vl && tvc == vc
-    if !cursorOnClose
-        let [cl, cc] = searchpos(a:closePattern, 'W')
+    if util#MatchCurrent(g:TextObj_constant_word, cl, cc)
+        let [tcl, tcc] = searchpos(a:closePattern, 'cWn')
+        let [tvl, tvc] = searchpos(a:openPattern, 'bcWn')
+        let cursorOnClose = tcl == cl && tcc == cc
+        let cursorOnOpen = tvl == vl && tvc == vc
+        if !cursorOnClose
+            let [cl, cc] = searchpos(a:closePattern, 'W')
+        endif
+        call cursor(vl, vc)
+        if !cursorOnOpen
+            let [vl, vc] = searchpos(a:openPattern, 'bW')
+        endif
+        return [vl, vc, cl ,cc]
     endif
-    call cursor(vl, vc)
-    if !cursorOnOpen
-        let [vl, vc] = searchpos(a:openPattern, 'bW')
-    endif
-    return [vl, vc, cl ,cc]
+    return [0, 0, 0, 0]
 endfunction

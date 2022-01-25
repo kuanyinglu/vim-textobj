@@ -66,161 +66,167 @@ let g:TextObj_subwordPatterns = { 'opening': s:subwordOpening, 'closing': s:subw
 " 30 - normal mode, current
 " 31 - normal mode, current, inner
 
-"Normal and visual mode move
-nmap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  0)<cr>
-nmap [q :<c-u>call txtObj#Move('move#quote#GetQuotes',  1)<cr>
-nmap ]Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  2)<cr>
-nmap [Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  3)<cr>
-vmap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  4)<cr>
-vmap [q :<c-u>call txtObj#Move('move#quote#GetQuotes',  5)<cr>
-vmap ]Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  6)<cr>
-vmap [Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  7)<cr>
-nmap ]iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  8)<cr>
-nmap [iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  9)<cr>
-nmap ]iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  10)<cr>
-nmap [iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  11)<cr>
-vmap ]iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  12)<cr>
-vmap [iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  13)<cr>
-vmap ]iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  14)<cr>
-vmap [iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  15)<cr>
-nmap ]b :<c-u>call txtObj#Move('move#pair#GetPairs',  0)<cr>
-nmap [b :<c-u>call txtObj#Move('move#pair#GetPairs',  1)<cr>
-nmap ]B :<c-u>call txtObj#Move('move#pair#GetPairs',  2)<cr>
-nmap [B :<c-u>call txtObj#Move('move#pair#GetPairs',  3)<cr>
-vmap ]b :<c-u>call txtObj#Move('move#pair#GetPairs',  4)<cr>
-vmap [b :<c-u>call txtObj#Move('move#pair#GetPairs',  5)<cr>
-vmap ]B :<c-u>call txtObj#Move('move#pair#GetPairs',  6)<cr>
-vmap [B :<c-u>call txtObj#Move('move#pair#GetPairs',  7)<cr>
-nmap ]ib :<c-u>call txtObj#Move('move#pair#GetPairs',  8)<cr>
-nmap [ib :<c-u>call txtObj#Move('move#pair#GetPairs',  9)<cr>
-nmap ]iB :<c-u>call txtObj#Move('move#pair#GetPairs',  10)<cr>
-nmap [iB :<c-u>call txtObj#Move('move#pair#GetPairs',  11)<cr>
-vmap ]ib :<c-u>call txtObj#Move('move#pair#GetPairs',  12)<cr>
-vmap [ib :<c-u>call txtObj#Move('move#pair#GetPairs',  13)<cr>
-vmap ]iB :<c-u>call txtObj#Move('move#pair#GetPairs',  14)<cr>
-vmap [iB :<c-u>call txtObj#Move('move#pair#GetPairs',  15)<cr>
-nmap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  0)<cr>
-nmap [t :<c-u>call txtObj#Move('move#tag#GetTags',  1)<cr>
-nmap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  2)<cr>
-nmap [T :<c-u>call txtObj#Move('move#tag#GetTags',  3)<cr>
-vmap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  4)<cr>
-vmap [t :<c-u>call txtObj#Move('move#tag#GetTags',  5)<cr>
-vmap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  6)<cr>
-vmap [T :<c-u>call txtObj#Move('move#tag#GetTags',  7)<cr>
-nmap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  8)<cr>
-nmap [it :<c-u>call txtObj#Move('move#tag#GetTags',  9)<cr>
-nmap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  10)<cr>
-nmap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  11)<cr>
-vmap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  12)<cr>
-vmap [it :<c-u>call txtObj#Move('move#tag#GetTags',  13)<cr>
-vmap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  14)<cr>
-vmap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  15)<cr>
-nmap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  0)<cr>
-nmap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  1)<cr>
-nmap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  2)<cr>
-nmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  3)<cr>
-vmap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  4)<cr>
-vmap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  5)<cr>
-vmap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  6)<cr>
-vmap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  7)<cr>
-nmap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  0)<cr>
-nmap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  1)<cr>
-nmap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  2)<cr>
-nmap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  3)<cr>
-vmap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  4)<cr>
-vmap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  5)<cr>
-vmap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  6)<cr>
-vmap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  7)<cr>
-nmap ]w :<c-u>call txtObj#Move('move#word#GetWords',  0)<cr>
-nmap [w :<c-u>call txtObj#Move('move#word#GetWords',  1)<cr>
-nmap ]W :<c-u>call txtObj#Move('move#word#GetWords',  2)<cr>
-nmap [W :<c-u>call txtObj#Move('move#word#GetWords',  3)<cr>
-vmap ]w :<c-u>call txtObj#Move('move#word#GetWords',  4)<cr>
-vmap [w :<c-u>call txtObj#Move('move#word#GetWords',  5)<cr>
-vmap ]W :<c-u>call txtObj#Move('move#word#GetWords',  6)<cr>
-vmap [W :<c-u>call txtObj#Move('move#word#GetWords',  7)<cr>
+if !exists('g:TextObj_setMapping')
+    "Normal and visual mode move
+    nnoremap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  0)<cr>
+    nnoremap [q :<c-u>call txtObj#Move('move#quote#GetQuotes',  1)<cr>
+    nnoremap ]Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  2)<cr>
+    nnoremap [Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  3)<cr>
+    vnoremap ]q :<c-u>call txtObj#Move('move#quote#GetQuotes',  4)<cr>
+    vnoremap [q :<c-u>call txtObj#Move('move#quote#GetQuotes',  5)<cr>
+    vnoremap ]Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  6)<cr>
+    vnoremap [Q :<c-u>call txtObj#Move('move#quote#GetQuotes',  7)<cr>
+    nnoremap ]iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  8)<cr>
+    nnoremap [iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  9)<cr>
+    nnoremap ]iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  10)<cr>
+    nnoremap [iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  11)<cr>
+    vnoremap ]iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  12)<cr>
+    vnoremap [iq :<c-u>call txtObj#Move('move#quote#GetQuotes',  13)<cr>
+    vnoremap ]iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  14)<cr>
+    vnoremap [iQ :<c-u>call txtObj#Move('move#quote#GetQuotes',  15)<cr>
+    nnoremap ]b :<c-u>call txtObj#Move('move#pair#GetPairs',  0)<cr>
+    nnoremap [b :<c-u>call txtObj#Move('move#pair#GetPairs',  1)<cr>
+    nnoremap ]B :<c-u>call txtObj#Move('move#pair#GetPairs',  2)<cr>
+    nnoremap [B :<c-u>call txtObj#Move('move#pair#GetPairs',  3)<cr>
+    vnoremap ]b :<c-u>call txtObj#Move('move#pair#GetPairs',  4)<cr>
+    vnoremap [b :<c-u>call txtObj#Move('move#pair#GetPairs',  5)<cr>
+    vnoremap ]B :<c-u>call txtObj#Move('move#pair#GetPairs',  6)<cr>
+    vnoremap [B :<c-u>call txtObj#Move('move#pair#GetPairs',  7)<cr>
+    nnoremap ]ib :<c-u>call txtObj#Move('move#pair#GetPairs',  8)<cr>
+    nnoremap [ib :<c-u>call txtObj#Move('move#pair#GetPairs',  9)<cr>
+    nnoremap ]iB :<c-u>call txtObj#Move('move#pair#GetPairs',  10)<cr>
+    nnoremap [iB :<c-u>call txtObj#Move('move#pair#GetPairs',  11)<cr>
+    vnoremap ]ib :<c-u>call txtObj#Move('move#pair#GetPairs',  12)<cr>
+    vnoremap [ib :<c-u>call txtObj#Move('move#pair#GetPairs',  13)<cr>
+    vnoremap ]iB :<c-u>call txtObj#Move('move#pair#GetPairs',  14)<cr>
+    vnoremap [iB :<c-u>call txtObj#Move('move#pair#GetPairs',  15)<cr>
+    nnoremap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  0)<cr>
+    nnoremap [t :<c-u>call txtObj#Move('move#tag#GetTags',  1)<cr>
+    nnoremap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  2)<cr>
+    nnoremap [T :<c-u>call txtObj#Move('move#tag#GetTags',  3)<cr>
+    vnoremap ]t :<c-u>call txtObj#Move('move#tag#GetTags',  4)<cr>
+    vnoremap [t :<c-u>call txtObj#Move('move#tag#GetTags',  5)<cr>
+    vnoremap ]T :<c-u>call txtObj#Move('move#tag#GetTags',  6)<cr>
+    vnoremap [T :<c-u>call txtObj#Move('move#tag#GetTags',  7)<cr>
+    nnoremap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  8)<cr>
+    nnoremap [it :<c-u>call txtObj#Move('move#tag#GetTags',  9)<cr>
+    nnoremap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  10)<cr>
+    nnoremap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  11)<cr>
+    vnoremap ]it :<c-u>call txtObj#Move('move#tag#GetTags',  12)<cr>
+    vnoremap [it :<c-u>call txtObj#Move('move#tag#GetTags',  13)<cr>
+    vnoremap ]iT :<c-u>call txtObj#Move('move#tag#GetTags',  14)<cr>
+    vnoremap [iT :<c-u>call txtObj#Move('move#tag#GetTags',  15)<cr>
+    nnoremap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  0)<cr>
+    nnoremap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  1)<cr>
+    nnoremap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  2)<cr>
+    nnoremap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  3)<cr>
+    vnoremap ]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  4)<cr>
+    vnoremap [<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  5)<cr>
+    vnoremap ]]<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  6)<cr>
+    vnoremap [[<space> :<c-u>call txtObj#Move('move#space#GetSpaces',  7)<cr>
+    nnoremap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  0)<cr>
+    nnoremap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  1)<cr>
+    nnoremap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  2)<cr>
+    nnoremap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  3)<cr>
+    vnoremap ]s :<c-u>call txtObj#Move('move#subword#GetSubWords',  4)<cr>
+    vnoremap [s :<c-u>call txtObj#Move('move#subword#GetSubWords',  5)<cr>
+    vnoremap ]S :<c-u>call txtObj#Move('move#subword#GetSubWords',  6)<cr>
+    vnoremap [S :<c-u>call txtObj#Move('move#subword#GetSubWords',  7)<cr>
+    nnoremap ]w :<c-u>call txtObj#Move('move#word#GetWords',  0)<cr>
+    nnoremap [w :<c-u>call txtObj#Move('move#word#GetWords',  1)<cr>
+    nnoremap ]W :<c-u>call txtObj#Move('move#word#GetWords',  2)<cr>
+    nnoremap [W :<c-u>call txtObj#Move('move#word#GetWords',  3)<cr>
+    vnoremap ]w :<c-u>call txtObj#Move('move#word#GetWords',  4)<cr>
+    vnoremap [w :<c-u>call txtObj#Move('move#word#GetWords',  5)<cr>
+    vnoremap ]W :<c-u>call txtObj#Move('move#word#GetWords',  6)<cr>
+    vnoremap [W :<c-u>call txtObj#Move('move#word#GetWords',  7)<cr>
 
-"Operator pending mode
+    "Operator pending mode
+    onoremap ]q :<c-u>call txtObj#Op('move#quote#GetQuotes',  20)<cr>
+    onoremap [q :<c-u>call txtObj#Op('move#quote#GetQuotes',  21)<cr>
+    onoremap ]Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  22)<cr>
+    onoremap [Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  23)<cr>
+    onoremap ]iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  24)<cr>
+    onoremap [iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  25)<cr>
+    onoremap ]iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  26)<cr>
+    onoremap [iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  27)<cr>
+    onoremap ]b :<c-u>call txtObj#Op('move#pair#GetPairs',  20)<cr>
+    onoremap [b :<c-u>call txtObj#Op('move#pair#GetPairs',  21)<cr>
+    onoremap ]B :<c-u>call txtObj#Op('move#pair#GetPairs',  22)<cr>
+    onoremap [B :<c-u>call txtObj#Op('move#pair#GetPairs',  23)<cr>
+    onoremap ]ib :<c-u>call txtObj#Op('move#pair#GetPairs',  24)<cr>
+    onoremap [ib :<c-u>call txtObj#Op('move#pair#GetPairs',  25)<cr>
+    onoremap ]iB :<c-u>call txtObj#Op('move#pair#GetPairs',  26)<cr>
+    onoremap [iB :<c-u>call txtObj#Op('move#pair#GetPairs',  27)<cr>
+    onoremap ]t :<c-u>call txtObj#Op('move#tag#GetTags',  20)<cr>
+    onoremap [t :<c-u>call txtObj#Op('move#tag#GetTags',  21)<cr>
+    onoremap ]T :<c-u>call txtObj#Op('move#tag#GetTags',  22)<cr>
+    onoremap [T :<c-u>call txtObj#Op('move#tag#GetTags',  23)<cr>
+    onoremap ]it :<c-u>call txtObj#Op('move#tag#GetTags',  24)<cr>
+    onoremap [it :<c-u>call txtObj#Op('move#tag#GetTags',  25)<cr>
+    onoremap ]iT :<c-u>call txtObj#Op('move#tag#GetTags',  26)<cr>
+    onoremap [iT :<c-u>call txtObj#Op('move#tag#GetTags',  27)<cr>
+    onoremap ]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 20)<cr>
+    onoremap [<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 21)<cr>
+    onoremap ]]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 22)<cr>
+    onoremap [[<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 23)<cr>
+    onoremap ]s :<c-u>call txtObj#Op('move#subword#GetSubWords',  20)<cr>
+    onoremap [s :<c-u>call txtObj#Op('move#subword#GetSubWords',  21)<cr>
+    onoremap ]S :<c-u>call txtObj#Op('move#subword#GetSubWords',  22)<cr>
+    onoremap [S :<c-u>call txtObj#Op('move#subword#GetSubWords',  23)<cr>
+    onoremap ]w :<c-u>call txtObj#Op('move#word#GetWords',  20)<cr>
+    onoremap [w :<c-u>call txtObj#Op('move#word#GetWords',  21)<cr>
+    onoremap ]W :<c-u>call txtObj#Op('move#word#GetWords',  22)<cr>
+    onoremap [W :<c-u>call txtObj#Op('move#word#GetWords',  23)<cr>
 
-omap ]q :<c-u>call txtObj#Op('move#quote#GetQuotes',  20)<cr>
-omap [q :<c-u>call txtObj#Op('move#quote#GetQuotes',  21)<cr>
-omap ]Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  22)<cr>
-omap [Q :<c-u>call txtObj#Op('move#quote#GetQuotes',  23)<cr>
-omap ]iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  24)<cr>
-omap [iq :<c-u>call txtObj#Op('move#quote#GetQuotes',  25)<cr>
-omap ]iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  26)<cr>
-omap [iQ :<c-u>call txtObj#Op('move#quote#GetQuotes',  27)<cr>
-omap ]b :<c-u>call txtObj#Op('move#pair#GetPairs',  20)<cr>
-omap [b :<c-u>call txtObj#Op('move#pair#GetPairs',  21)<cr>
-omap ]B :<c-u>call txtObj#Op('move#pair#GetPairs',  22)<cr>
-omap [B :<c-u>call txtObj#Op('move#pair#GetPairs',  23)<cr>
-omap ]ib :<c-u>call txtObj#Op('move#pair#GetPairs',  24)<cr>
-omap [ib :<c-u>call txtObj#Op('move#pair#GetPairs',  25)<cr>
-omap ]iB :<c-u>call txtObj#Op('move#pair#GetPairs',  26)<cr>
-omap [iB :<c-u>call txtObj#Op('move#pair#GetPairs',  27)<cr>
-omap ]t :<c-u>call txtObj#Op('move#tag#GetTags',  20)<cr>
-omap [t :<c-u>call txtObj#Op('move#tag#GetTags',  21)<cr>
-omap ]T :<c-u>call txtObj#Op('move#tag#GetTags',  22)<cr>
-omap [T :<c-u>call txtObj#Op('move#tag#GetTags',  23)<cr>
-omap ]it :<c-u>call txtObj#Op('move#tag#GetTags',  24)<cr>
-omap [it :<c-u>call txtObj#Op('move#tag#GetTags',  25)<cr>
-omap ]iT :<c-u>call txtObj#Op('move#tag#GetTags',  26)<cr>
-omap [iT :<c-u>call txtObj#Op('move#tag#GetTags',  27)<cr>
-omap ]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 20)<cr>
-omap [<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 21)<cr>
-omap ]]<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 22)<cr>
-omap [[<space> :<c-u>call txtObj#Op('move#space#GetSpaces', 23)<cr>
-omap ]s :<c-u>call txtObj#Op('move#subword#GetSubWords',  20)<cr>
-omap [s :<c-u>call txtObj#Op('move#subword#GetSubWords',  21)<cr>
-omap ]S :<c-u>call txtObj#Op('move#subword#GetSubWords',  22)<cr>
-omap [S :<c-u>call txtObj#Op('move#subword#GetSubWords',  23)<cr>
-omap ]w :<c-u>call txtObj#Op('move#word#GetWords',  20)<cr>
-omap [w :<c-u>call txtObj#Op('move#word#GetWords',  21)<cr>
-omap ]W :<c-u>call txtObj#Op('move#word#GetWords',  22)<cr>
-omap [W :<c-u>call txtObj#Op('move#word#GetWords',  23)<cr>
+    "Expand, shrink
+    map { <nop>
+    map } <nop>
+    vnoremap }b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  16)<cr>
+    vnoremap {b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  17)<cr>
+    vnoremap }ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  18)<cr>
+    vnoremap {ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  19)<cr>
+    vnoremap }q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  16)<cr>
+    vnoremap {q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  17)<cr>
+    vnoremap }iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  18)<cr>
+    vnoremap {iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  19)<cr>
+    vnoremap }t :<c-u>call txtObj#Scale('scale#tag#GetTags',  16)<cr>
+    vnoremap {t :<c-u>call txtObj#Scale('scale#tag#GetTags',  17)<cr>
+    vnoremap }it :<c-u>call txtObj#Scale('scale#tag#GetTags',  18)<cr>
+    vnoremap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>
+    vnoremap }<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  16)<cr>
+    vnoremap {<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  17)<cr>
+    vnoremap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
+    vnoremap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>
+    vnoremap }s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  16)<cr>
+    vnoremap {s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  17)<cr>
+    vnoremap }w :<c-u>call txtObj#Scale('scale#word#GetWords',  16)<cr>
+    vnoremap {w :<c-u>call txtObj#Scale('scale#word#GetWords',  17)<cr>
 
-"Expand, shrink
-map { <nop>
-map } <nop>
-vmap }b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  16)<cr>
-vmap {b :<c-u>call txtObj#Scale('scale#pair#GetPairs',  17)<cr>
-vmap }ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  18)<cr>
-vmap {ib :<c-u>call txtObj#Scale('scale#pair#GetPairs',  19)<cr>
-vmap }q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  16)<cr>
-vmap {q :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  17)<cr>
-vmap }iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  18)<cr>
-vmap {iq :<c-u>call txtObj#Scale('scale#quote#GetQuotes',  19)<cr>
-vmap }t :<c-u>call txtObj#Scale('scale#tag#GetTags',  16)<cr>
-vmap {t :<c-u>call txtObj#Scale('scale#tag#GetTags',  17)<cr>
-vmap }it :<c-u>call txtObj#Scale('scale#tag#GetTags',  18)<cr>
-vmap {it :<c-u>call txtObj#Scale('scale#tag#GetTags',  19)<cr>
-vmap }<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  16)<cr>
-vmap {<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  17)<cr>
-vmap }i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  18)<cr>
-vmap {i<space> :<c-u>call txtObj#Scale('scale#space#GetSpaces',  19)<cr>
-vmap }s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  16)<cr>
-vmap {s :<c-u>call txtObj#Scale('scale#subword#GetSubWords',  17)<cr>
-vmap }w :<c-u>call txtObj#Scale('scale#word#GetWords',  16)<cr>
-vmap {w :<c-u>call txtObj#Scale('scale#word#GetWords',  17)<cr>
+    "Current Cursor
+    onoremap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
+    onoremap iq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  29)<cr>
+    nnoremap vaq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  30)<cr>
+    nnoremap viq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  31)<cr>
+    onoremap ab :<c-u>call txtObj#Current('scale#pair#GetPairs',  28)<cr>
+    onoremap ib :<c-u>call txtObj#Current('scale#pair#GetPairs',  29)<cr>
+    nnoremap vab :<c-u>call txtObj#Current('scale#pair#GetPairs',  30)<cr>
+    nnoremap vib :<c-u>call txtObj#Current('scale#pair#GetPairs',  31)<cr>
+    onoremap at :<c-u>call txtObj#Current('scale#tag#GetTags',  28)<cr>
+    onoremap it :<c-u>call txtObj#Current('scale#tag#GetTags',  29)<cr>
+    nnoremap vat :<c-u>call txtObj#Current('scale#tag#GetTags',  30)<cr>
+    nnoremap vit :<c-u>call txtObj#Current('scale#tag#GetTags',  31)<cr>
+    onoremap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  28)<cr>
+    onoremap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  29)<cr>
+    nnoremap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
+    nnoremap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
+    onoremap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  28)<cr>
+    nnoremap vs :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>
+    onoremap w :<c-u>call txtObj#Current('scale#word#GetWords',  28)<cr>
+    nnoremap vw :<c-u>call txtObj#Current('scale#word#GetWords',  30)<cr>
 
-"Current Cursor
-omap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
-omap iq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  29)<cr>
-nmap vaq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  30)<cr>
-nmap viq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  31)<cr>
-omap ab :<c-u>call txtObj#Current('scale#pair#GetPairs',  28)<cr>
-omap ib :<c-u>call txtObj#Current('scale#pair#GetPairs',  29)<cr>
-nmap vab :<c-u>call txtObj#Current('scale#pair#GetPairs',  30)<cr>
-nmap vib :<c-u>call txtObj#Current('scale#pair#GetPairs',  31)<cr>
-omap at :<c-u>call txtObj#Current('scale#tag#GetTags',  28)<cr>
-omap it :<c-u>call txtObj#Current('scale#tag#GetTags',  29)<cr>
-nmap vat :<c-u>call txtObj#Current('scale#tag#GetTags',  30)<cr>
-nmap vit :<c-u>call txtObj#Current('scale#tag#GetTags',  31)<cr>
-omap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  28)<cr>
-omap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  29)<cr>
-nmap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
-nmap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
-omap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  28)<cr>
-nmap vs :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>
-omap w :<c-u>call txtObj#Current('scale#word#GetWords',  28)<cr>
-nmap vw :<c-u>call txtObj#Current('scale#word#GetWords',  30)<cr>
+    if !exists('g:TextObj_setRepeat')
+        nnoremap ; :<c-u>call txtObj#Repeat('n')<cr>
+        vnoremap ; :<c-u>call txtObj#Repeat('v')<cr>
+    endif
+endif

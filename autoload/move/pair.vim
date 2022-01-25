@@ -40,8 +40,12 @@ function! move#pair#GetPair(pairPatterns, seekDir)
     let [_, l, c, _, _] = getcurpos()
     let [rl, rc] = [l, c]
     if a:seekDir >= 1 && a:seekDir <= 4
-        if (a:seekDir == 3 || a:seekDir == 4) && util#MatchNextChar(a:pairPatterns.closing, l, c)
+        if (a:seekDir == 3) && util#MatchNextChar(a:pairPatterns.closing, l, c)
             let [l, c] = util#GetNextPos(l, c)
+            call cursor(l, c)
+        endif
+        if (a:seekDir == 4) && util#MatchPrevChar(a:pairPatterns.opening, l, c)
+            let [l, c] = util#GetPrevPos(l, c)
             call cursor(l, c)
         endif
         if a:seekDir == 1 || a:seekDir == 3
@@ -53,7 +57,11 @@ function! move#pair#GetPair(pairPatterns, seekDir)
             let [rl, rc] = [0, 0]
         endif
     elseif a:seekDir <= -1 && a:seekDir >= -4
-        if (a:seekDir == -3 || a:seekDir == -4) && util#MatchPrevChar(a:pairPatterns.opening, l, c)
+        if (a:seekDir == -4) && util#MatchNextChar(a:pairPatterns.closing, l, c)
+            let [l, c] = util#GetNextPos(l, c)
+            call cursor(l, c)
+        endif
+        if (a:seekDir == -3) && util#MatchPrevChar(a:pairPatterns.opening, l, c)
             let [l, c] = util#GetPrevPos(l, c)
             call cursor(l, c)
         endif

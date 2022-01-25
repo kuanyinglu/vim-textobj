@@ -47,10 +47,14 @@ function! scale#quote#GetQuotes(cursorPos, scaleMode)
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
         elseif a:scaleMode == 3 || a:scaleMode == 4
-            let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
-            if a:scaleMode == 4
-                let [cl, cc] = util#GetPrevPos(cl, cc)
-                let [vl, vc] = util#GetNextPos(vl, vc)
+            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
+            let closerSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
+            if firstSelection || closerSelection
+                let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
+                if a:scaleMode == 4
+                    let [cl, cc] = util#GetPrevPos(cl, cc)
+                    let [vl, vc] = util#GetNextPos(vl, vc)
+                endif
             endif
         endif
     endfor

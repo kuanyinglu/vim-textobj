@@ -1,3 +1,6 @@
+let s:repeatCommand = ''
+let s:repeatCommandInner = ''
+let s:repeatCommandMode = 0
 " 0 - normal mode, forward, end
 " 1 - normal mode, backward, end
 " 2 - normal mode, forward, start
@@ -78,6 +81,7 @@ function! txtObj#Move(f, mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
     let [rl, rc] = [0, 0]
+    call txtObj#SetRepeat('txtObj#Move', a:f, a:mode)
     if a:mode >= 0 && a:mode <= 15
         for _ in range(multiplier)
             let [rl, rc] = call(function(a:f), [[cl, cc], seekDir])
@@ -91,7 +95,6 @@ function! txtObj#Move(f, mode)
             endif
         endfor
     endif
-    echom [rl, rc]
 endfunction
 
 function! txtObj#Op(f, mode)
@@ -100,6 +103,7 @@ function! txtObj#Op(f, mode)
     call SetupCursor(a:mode)
     let [_, cl, cc, _, _] = getcurpos()
     let [rl, rc] = [0, 0]
+    call txtObj#SetRepeat('', a:f, a:mode)
     if a:mode >= 20 && a:mode <= 27
         for _ in range(multiplier)
             let [rl, rc] = call(function(a:f), [[cl, cc], seekDir])
@@ -117,7 +121,6 @@ function! txtObj#Op(f, mode)
             endif
         endfor
     endif
-    echom [rl, rc]
 endfunction
 
 function! txtObj#Scale(f, mode)
@@ -125,6 +128,7 @@ function! txtObj#Scale(f, mode)
     let scaleMode = GetScaleMode(a:mode)
     normal! gv
     let [vl, vc, cl ,cc] = [line('v'), col('v'), line('.'), col('.')]
+    call txtObj#SetRepeat('txtObj#Scale', a:f, a:mode)
     if a:mode >= 16 && a:mode <= 19 
         for _ in range(multiplier)
             let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[vl, vc, cl, cc], scaleMode])
@@ -137,18 +141,63 @@ function! txtObj#Scale(f, mode)
             endif
         endfor
     endif
-    echom [vl, vc, cl ,cc]
 endfunction
 
 function! txtObj#Current(f, mode)
     let [cl ,cc] = [line('.'), col('.')]
     let scaleMode = GetScaleMode(a:mode)
     normal! v
+    call txtObj#SetRepeat('txtObj#Current', a:f, a:mode)
     let [tvl, tvc, tcl ,tcc] = call(function(a:f), [[cl, cc, cl, cc], scaleMode])
     if tvl != 0
         call util#MakeSelection([tvl, tvc, tcl, tcc])
     else
         call cursor(cl, cc)
     endif
-    echom [tvl, tvc, tcl, tcc]
+endfunction
+
+function! txtObj#Repeat(callingMode)
+    let newMode = txtObj#ConvertMode(a:callingMode, s:repeatCommandMode)
+    if len(s:repeatCommand) > 0 && len(s:repeatCommandInner) > 0 && newMode != -1
+        call call(function(s:repeatCommand), [s:repeatCommandInner, newMode])
+    endif
+endfunction
+
+function! txtObj#SetRepeat(f, innerF, mode)
+    let s:repeatCommand = a:f
+    let s:repeatCommandInner = a:innerF
+    let s:repeatCommandMode = a:mode
+endfunction
+
+" Convert to use the right function depending on whether its visual mode or normal mode
+function! txtObj#ConvertMode(callingMode, originalMode)
+    if a:callingMode == 'v'
+        if a:originalMode >= 0 && a:originalMode <= 3
+            return a:originalMode + 4
+        elseif a:originalMode >= 4 && a:originalMode <= 7
+            return a:originalMode
+        elseif a:originalMode >= 8 && a:originalMode <= 11
+            return a:originalMode + 4
+        elseif a:originalMode >= 12 && a:originalMode <= 19
+            return a:originalMode
+        else
+            return -1
+        endif
+    elseif a:callingMode == 'n'
+        if a:originalMode >= 0 && a:originalMode <= 3
+            return a:originalMode
+        elseif a:originalMode >= 4 && a:originalMode <= 7
+            return a:originalMode - 4
+        elseif a:originalMode >= 8 && a:originalMode <= 11
+            return a:originalMode
+        elseif a:originalMode >= 12 && a:originalMode <= 15
+            return a:originalMode - 4
+        elseif a:originalMode >= 30 && a:originalMode <= 31
+            return a:originalMode
+        else
+            return -1
+        endif
+    else
+        return -1
+    endif
 endfunction

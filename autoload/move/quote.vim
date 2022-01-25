@@ -37,17 +37,20 @@ endfunction
 
 function! move#quote#GetOneQuote(quotePattern, seekDir)
     let [_, l, c, _, _] = getcurpos()
-    if (a:seekDir == 3 || a:seekDir == 4) && util#MatchNextChar(a:quotePattern, l, c)
-        let [l, c] = util#GetNextPos(l, c)
-        call cursor(l, c)
-    endif
-    if (a:seekDir == -3 || a:seekDir == -4) && util#MatchPrevChar(a:quotePattern, l, c)
-        let [l, c] = util#GetPrevPos(l, c)
-        call cursor(l, c)
-    endif
+    let line = getline('.')
+    let col = col('.')
+    let [quotingLeft, quotingRight] = util#GetQuoteDir(line, col, a:quotePattern)
     let [rl, rc] = [l, c]
     
     if a:seekDir >= 1 && a:seekDir <= 4
+        if (a:seekDir == 3) && util#MatchNextChar(a:quotePattern, l, c)
+            let [l, c] = util#GetNextPos(l, c)
+            call cursor(l, c)
+        endif
+        if (a:seekDir == 4) && util#MatchPrevChar(a:quotePattern, l, c)
+            let [l, c] = util#GetPrevPos(l, c)
+            call cursor(l, c)
+        endif
         if ((!quotingRight && (a:seekDir == 1 || a:seekDir == 3))) || (quotingRight && (a:seekDir == 2 || a:seekDir == 4))
             call searchpos(a:quotePattern, 'W')
         endif
@@ -56,6 +59,14 @@ function! move#quote#GetOneQuote(quotePattern, seekDir)
             let [rl, rc] = [0, 0]
         endif
     elseif a:seekDir <= -1 && a:seekDir >= -4
+        if (a:seekDir == -4) && util#MatchNextChar(a:quotePattern, l, c)
+            let [l, c] = util#GetNextPos(l, c)
+            call cursor(l, c)
+        endif
+        if (a:seekDir == -3) && util#MatchPrevChar(a:quotePattern, l, c)
+            let [l, c] = util#GetPrevPos(l, c)
+            call cursor(l, c)
+        endif
         if ((!quotingLeft && (a:seekDir == -1 || a:seekDir == -3))) || (quotingLeft && (a:seekDir == -2 || a:seekDir == -4))
             call searchpos(a:quotePattern, 'bW')
         endif

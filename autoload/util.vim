@@ -62,6 +62,15 @@ function! util#MatchPrevChar(pattern, l, c)
     return v:false
 endfunction
 
+function! util#MatchCurrent(pattern, l, c)
+    let line = getline(a:l)
+    let cursor = line[a:c-1]
+    if len(split(cursor, a:pattern, 1)[-1]) == 0
+        return v:true 
+    endif
+    return v:false
+endfunction
+
 function! util#MakeSelection(cursorPos)
     let [vl, vc, cl ,cc] = a:cursorPos
     if mode() == 'v'

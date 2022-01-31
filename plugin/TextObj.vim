@@ -206,24 +206,24 @@ if !exists('g:TextObj_setMapping')
     "Current Cursor
     onoremap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  28)<cr>
     onoremap iq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  29)<cr>
-    nnoremap vaq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  30)<cr>
-    nnoremap viq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  31)<cr>
+    vnoremap aq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  30)<cr>
+    vnoremap iq :<c-u>call txtObj#Current('scale#quote#GetQuotes',  31)<cr>
     onoremap ab :<c-u>call txtObj#Current('scale#pair#GetPairs',  28)<cr>
     onoremap ib :<c-u>call txtObj#Current('scale#pair#GetPairs',  29)<cr>
-    nnoremap vab :<c-u>call txtObj#Current('scale#pair#GetPairs',  30)<cr>
-    nnoremap vib :<c-u>call txtObj#Current('scale#pair#GetPairs',  31)<cr>
+    vnoremap ab :<c-u>call txtObj#Current('scale#pair#GetPairs',  30)<cr>
+    vnoremap ib :<c-u>call txtObj#Current('scale#pair#GetPairs',  31)<cr>
     onoremap at :<c-u>call txtObj#Current('scale#tag#GetTags',  28)<cr>
     onoremap it :<c-u>call txtObj#Current('scale#tag#GetTags',  29)<cr>
-    nnoremap vat :<c-u>call txtObj#Current('scale#tag#GetTags',  30)<cr>
-    nnoremap vit :<c-u>call txtObj#Current('scale#tag#GetTags',  31)<cr>
+    vnoremap at :<c-u>call txtObj#Current('scale#tag#GetTags',  30)<cr>
+    vnoremap it :<c-u>call txtObj#Current('scale#tag#GetTags',  31)<cr>
     onoremap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  28)<cr>
     onoremap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  29)<cr>
-    nnoremap va<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
-    nnoremap vi<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
+    vnoremap a<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  30)<cr>
+    vnoremap i<space> :<c-u>call txtObj#Current('scale#space#GetSpaces',  31)<cr>
     onoremap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  28)<cr>
-    nnoremap vs :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>
+    vnoremap s :<c-u>call txtObj#Current('scale#subword#GetSubWords',  30)<cr>
     onoremap w :<c-u>call txtObj#Current('scale#word#GetWords',  28)<cr>
-    nnoremap vw :<c-u>call txtObj#Current('scale#word#GetWords',  30)<cr>
+    vnoremap w :<c-u>call txtObj#Current('scale#word#GetWords',  30)<cr>
 
     if !exists('g:TextObj_setRepeat')
         nnoremap ; :<c-u>call txtObj#Repeat('n')<cr>

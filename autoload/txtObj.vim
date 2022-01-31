@@ -144,7 +144,7 @@ function! txtObj#Scale(f, mode)
 endfunction
 
 function! txtObj#Current(f, mode)
-    let [cl ,cc] = [line('.'), col('.')]
+    let [cl, cc] = [line('.'), col('.')]
     let scaleMode = GetScaleMode(a:mode)
     normal! v
     call txtObj#SetRepeat('txtObj#Current', a:f, a:mode)

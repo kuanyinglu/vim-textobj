@@ -8,6 +8,7 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
+    let firstSelection = 1
     for pattern in g:TextObj_blockPatterns
         call util#MakeSelection(a:cursorPos)
         let [tvl, tvc, tcl, tcc] = scale#pair#GetPair(pattern, a:scaleMode)
@@ -24,10 +25,10 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
                     let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
             endif
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && ((tcl > ocl || (tcl == ocl && tcc > occ)) || (tvl < ovl || (tvl == ovl && tvc < ovc)))) || (!selectionForward && ((tvl > ovl || (tvl == ovl && tvc > ovc)) || (tcl < ocl || (tcl == ocl && tcc < occ))))
             let closerSelection = (selectionForward && ((tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc)))) || (!selectionForward && ((tvl < vl || (tvl == vl && tvc < vc)) || (tcl > cl || (tcl == cl && tcc > cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let firstSelection = 0
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
             continue
@@ -41,10 +42,10 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
                     let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
             endif
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && ((tcl < ocl || (tcl == ocl && tcc < occ)) || (tvl > ovl || (tvl == ovl && tvc > ovc)))) || (!selectionForward && ((tvl < ovl || (tvl == ovl && tvc < ovc)) || (tcl > ocl || (tcl == ocl && tcc > occ))))
             let closerSelection = (selectionForward && ((tcl > cl || (tcl == cl && tcc > cc)) || (tvl < vl || (tvl == vl && tvc < vc)))) || (!selectionForward && ((tvl > vl || (tvl == vl && tvc > vc)) || (tcl < cl || (tcl == cl && tcc < cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let firstSelection = 0
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
             continue
@@ -52,6 +53,7 @@ function! scale#pair#GetPairs(cursorPos, scaleMode)
             let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let closerSelection = (selectionForward && (tcl < cl || (tcl == cl && tcc < cc))) || (!selectionForward && (tvl < vl || (tvl == vl && tvc < vc)))
             if firstSelection || closerSelection
+                let firstSelection = 0
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
                 if a:scaleMode == 4
                     let [cl, cc] = util#GetPrevPos(cl, cc)

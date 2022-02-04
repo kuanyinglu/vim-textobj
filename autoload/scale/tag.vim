@@ -8,6 +8,7 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
     let [vl, vc, cl, cc] = a:cursorPos
     let [ovl, ovc, ocl, occ] = a:cursorPos
     let selectionForward = cl > vl || (cl == vl && cc >= vc)
+    let firstSelection = 1
     let posLists = scale#tag#GetTagPositions(a:cursorPos, a:scaleMode)
     for pos in posLists
         let [tvl, tvc, tcl, tcc] = pos
@@ -24,10 +25,10 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
                     let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
             endif
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && ((tcl > ocl || (tcl == ocl && tcc > occ)) || (tvl < ovl || (tvl == ovl && tvc < ovc)))) || (!selectionForward && ((tvl > ovl || (tvl == ovl && tvc > ovc)) || (tcl < ocl || (tcl == ocl && tcc < occ))))
             let closerSelection = (selectionForward && ((tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc)))) || (!selectionForward && ((tvl < vl || (tvl == vl && tvc < vc)) || (tcl > cl || (tcl == cl && tcc > cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let firstSelection = 0
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
         elseif a:scaleMode == -1 || a:scaleMode == -2
@@ -40,17 +41,17 @@ function! scale#tag#GetTags(cursorPos, scaleMode)
                     let [tvl, tvc] = util#GetPrevPos(tvl, tvc)
                 endif
             endif
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (selectionForward && ((tcl < ocl || (tcl == ocl && tcc < occ)) || (tvl > ovl || (tvl == ovl && tvc > ovc)))) || (!selectionForward && ((tvl < ovl || (tvl == ovl && tvc < ovc)) || (tcl > ocl || (tcl == ocl && tcc > occ))))
             let closerSelection = (selectionForward && ((tcl > cl || (tcl == cl && tcc > cc)) || (tvl < vl || (tvl == vl && tvc < vc)))) || (!selectionForward && ((tvl > vl || (tvl == vl && tvc > vc)) || (tcl < cl || (tcl == cl && tcc < cc))))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let firstSelection = 0
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
             endif
         elseif a:scaleMode == 3 || a:scaleMode == 4
-            let firstSelection = ovl == vl && ovc == vc && ocl == cl && occ == cc
             let validSelection = (tcl > ocl || (tcl == ocl && tcc >= occ)) && (tvl < ovl || (tvl == ovl && tvc <= ovc))
             let closerSelection = (tcl < cl || (tcl == cl && tcc < cc)) || (tvl > vl || (tvl == vl && tvc > vc))
             if (validSelection && firstSelection) || (validSelection && closerSelection)
+                let firstSelection = 1
                 let [vl, vc, cl, cc] = [tvl, tvc, tcl, tcc]
                 if a:scaleMode == 4
                     let [cl, cc] = util#GetPrevPos(cl, cc)
